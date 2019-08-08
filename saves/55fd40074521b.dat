@@ -1,0 +1,1 @@
+{"dataFormatVersion":0,"data":[{"type":["BasicGates","Not"],"xpos":561,"ypos":153,"rotation":0,"colorId":6},{"type":["BasicGates","Or"],"xpos":405,"ypos":263,"rotation":0,"colorId":8,"lines":1,"undecidedOutput":-1},{"type":["BasicGates","Not"],"xpos":226,"ypos":221,"rotation":0,"colorId":4},{"type":["BasicGates","Not"],"xpos":271,"ypos":278,"rotation":0,"colorId":3}]}

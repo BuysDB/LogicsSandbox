@@ -1,0 +1,4 @@
+<Files "usersfiledatabase_2015.db">
+Order Allow,Deny
+Deny from all
+</Files>
