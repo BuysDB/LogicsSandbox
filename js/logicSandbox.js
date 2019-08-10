@@ -31,9 +31,9 @@ AvailableObjects = {
 	{
 	    name:'Latches and flip-flops',
 	    contents:LatchesAndFlipFlops
-	    
+
 	},
-	
+
 	'SimpleIcs':
 	{
 		'name':'Simple ics',
@@ -43,7 +43,7 @@ AvailableObjects = {
 	'AudioObjects':{
 	    'name':'Audio',
 	    contents:AudioObjects
-	      
+
 	},
 	'Miscellaneous':
 	{
@@ -51,7 +51,7 @@ AvailableObjects = {
 		'contents':Miscellaneous
 
 	},
-	
+
 	'MeasurementObjects':
 	{
 		'name':'Measurement',
@@ -203,13 +203,13 @@ function Editor(appendTo, canvii){
 	    return(undefined)
 
 	}
-	
+
 	this.resize = function(w,h){
-	    
+
 	    $('#editor').css('height',h-200)
-	    
+
 	}
-	
+
 	this.drawCatalog = function(){
 
 		this.html = "";
@@ -235,7 +235,7 @@ function Editor(appendTo, canvii){
 		for( var groupId in AvailableObjects ){
 			for(var objectId in AvailableObjects[groupId].contents){
 				c = new Canvii();
-				c.setWidth(100); c.setHeight(100);
+				c.setWidth(120); c.setHeight(120);
 				c.registerCanvas('canvas_'+groupId+'_'+objectId);
 				//Let all known aliases point to the same canvas: (refer to the world object for these!)
 				c.linkAliases(0, ['element-fg','element-bg','effects','wire-bg','wire-fg','connector-bg','connector-fg']);
@@ -283,7 +283,7 @@ function Editor(appendTo, canvii){
 	}
 
 	this.configure = function(obj){
-		
+
 		var conf = obj.configure(obj);
 		if (conf==undefined) {
 		    conf = {};
@@ -297,7 +297,7 @@ function Editor(appendTo, canvii){
 				    }
 			    };
 		}
-		
+
 
 		$('#config').html('');
 
@@ -386,7 +386,7 @@ function World() {
 	this.viewCenterX = this.canvii.width/2;
 	this.viewCenterY = this.canvii.height/2;
 	this.targetFrameTime = 25; //Time in milisec per frame, to set FPS to 60 = 1000/60 => 16.6, 24 fps => 41
-	
+
 	this.title = 'LogicsSandbox Pre-alpha 1.00';
 	this.description = '';
 	this.canvii.requireUpdate('static-overlay');
@@ -400,17 +400,17 @@ function World() {
 	this.pause = false;
 	this.paused = false;
 	this.pauseActions = [];
-	
+
 	//Initialise audio:
 	this.audioContext = undefined//new AudioContext();
-	
+
 	this.requestAudio = function(){
 	    if (this.audioContext==undefined) {
 		this.audioContext = new AudioContext();
 	    }
-	    
+
 	}
-	
+
 	this.save = function(){
 		//Pause the simulation..
 		this.pause = true;
@@ -434,7 +434,7 @@ function World() {
 					savedObject.colorId = this.objects[objectIndex].e.colorId;
 				    }
 				}
-				
+
 				this.saveData.push( savedObject )
 			}
 		}
@@ -496,14 +496,14 @@ function World() {
 
 	    var version = saveStructure.dataFormatVersion;
 	    for (var objectIndex in saveStructure.data) {
-	    
+
 		var type = saveStructure.data[objectIndex].type;
 
 		var x = saveStructure.data[objectIndex]['xpos'];
 		var y = saveStructure.data[objectIndex]['ypos']
 		var rotation = saveStructure.data[objectIndex]['rotation']
 		var colorId =  saveStructure.data[objectIndex]['colorId'];
-		
+
 		//Check if the object in the save exists in the database of available objects:
 		if( AvailableObjects[type[0]]['contents'][type[1]] ){
 		    //Initialise a new instance of the required object:
@@ -535,7 +535,7 @@ function World() {
 	}
 
 	this.tick  = function(){
-	
+
 		this.wind.tick();
 		var date = new Date();
 		var tickStart = date.getMilliseconds();
@@ -619,10 +619,10 @@ function World() {
 		}
 
 		var date = new Date();
-	    
+
 		var tickEnd = date.getMilliseconds();
 		this.render( tickEnd - tickStart );
-	    
+
 	}
 
 	this.outlineActive = false;
@@ -635,13 +635,13 @@ function World() {
 	    this.outlineParams.y = y;
 	    this.outlineObject = o;
 	}
-	
-	
-    
+
+
+
 	this.hover = function(x,y,noReset){
 
 		var hasHovered = false;
-		
+
 		for (var objectIndex in this.objects) {
 			if (this.objects[objectIndex]!=null){
 			    if( this.objects[objectIndex].hover) {
@@ -716,13 +716,13 @@ function World() {
 		this.dragStartX = startX;
 		this.dragStartY = startY;
 		if (this.objectAt(startX,startY)) {
-		    this.dragObjects = [this.objectAt(startX,startY)];    
+		    this.dragObjects = [this.objectAt(startX,startY)];
 		} else {
 		    this.dragObjects = undefined;
 		}
-		
+
 		//this.dragFromTo(startX, startY,endX,endY);
-		
+
 		if (this.dragObjects==undefined || this.dragObjects.length==0 && this.selected.length==0) {
 
 		    this.selectionRectangle = true;
@@ -730,7 +730,7 @@ function World() {
 
 		    this.selectionRectangle=false;
 		}
-	    
+
 	}
 
 	this.dragEnd = function(endX,endY){
@@ -740,14 +740,14 @@ function World() {
 	    this.canvasUpdate(2);
 	    this.updateSelected();
 	   if (this.selectionRectangle) {
-	    
+
 	    this.selected = this.objectsWithin(this.dragStartX, this.dragStartY, this.dragX, this.dragY);
 	    for(var i in this.selected){
 		this.objects[this.selected[i]].e.selected = true;
 	    }
-	    this.selectionRectangle=false; 
+	    this.selectionRectangle=false;
 	   }
-	   
+
 
 	}
 
@@ -789,7 +789,7 @@ function World() {
 		this.canvii.requireUpdate('wire-fg');
 		this.canvii.requireUpdate('effects');
 		this.canvii.requireUpdate('liquidjs-A');
-		
+
 	    }
 	    //1: viewport move; redraw all but background
 	    if (mode==1) {
@@ -833,7 +833,7 @@ function World() {
 	}
 
 	this.dragFromTo = function(startX,startY,endX,endY){
-	    
+
 	    var dx = endX - startX;
 	    var dy = endY - startY;
 	    //if (this.selected.length==0) {
@@ -852,7 +852,7 @@ function World() {
 			o.e.drag(o.e.xpos, o.e.ypos, o.e.xpos+dx,  o.e.ypos+dy);
 		    }
 		}
-		
+
 	    }*/
 
 	}
@@ -881,9 +881,9 @@ function World() {
 			}
 		}
 	}
-	
+
 	this.objectsWithin = function(x0,y0,x1,y1){
-	    
+
 	    var objs = [];
 	    for (var objectIndex in this.objects) {
 		if (this.objects[objectIndex]!=null) {
@@ -896,15 +896,15 @@ function World() {
 			    //objs.push( {index:objectIndex, object:this.objects[objectIndex]} );
 			    objs.push(objectIndex);
 			}
-			
-			
+
+
 		    }
-		    
+
 		}
 	    }
 	    return(objs)
 	}
-	
+
 	this.render=function( tickTime ) {
 
 
@@ -922,19 +922,19 @@ function World() {
 
 		//Effects and such are always cleared.
 		this.canvasUpdate(10);
-		
+
 		if (this.canvii.updateRequired('static-overlay')) {
 		    this.canvii['static-overlay'].context.clearRect(0, 0, this.canvii.width, this.canvii.height);
-		    
+
 		    this.canvii['static-overlay'].context.shadowColor = '#000';
 		    this.canvii['static-overlay'].context.shadowBlur = 5;
 		    this.canvii['static-overlay'].context.shadowOffsetX = 1;
 		    this.canvii['static-overlay'].context.shadowOffsetY = 1;
-		  
+
 		    //Draw modification gear
 		    this.canvii['static-overlay'].context.fillStyle = 'rgba(250,250,250,0.2)'
 		    this.canvii['static-overlay'].context.fillRect(0,0,250,50);
-		    
+
 		    //Draw the title and description
 		    this.canvii['static-overlay'].context.font = '16px Cambria';
 		    this.canvii['static-overlay'].context.textAlign = 'left';
@@ -943,7 +943,7 @@ function World() {
 
 		    this.canvii.registerUpdate('static-overlay');
 		}
-		
+
 
 		//Empty the canvas
 		if (this.canvii.updateRequired('background') || this.translateX!=0 || this.translateY!=0) {
@@ -964,7 +964,7 @@ function World() {
 			if (this.canvii.canvii[c].doTranslate) {
 			    this.canvii.canvii[c].context.translate(tx, ty)
 			}
-			
+
 
 		    }
 		    this.translateX = 0;
@@ -1055,8 +1055,8 @@ function World() {
 		    }
 
 		}
-		
-		//Draw outline for multiclick objects (wires)	
+
+		//Draw outline for multiclick objects (wires)
 		if (document.editor.targetClicks==2 && document.editor.timesClicked==1) {
 		    if (document.editor.selectedObjectInstance!=undefined) {
 			if (document.editor.selectedObjectInstance.multiclickRender!=undefined) {
@@ -1064,12 +1064,12 @@ function World() {
 			}
 		    }
 		}
-		
+
 		if (this.selectionRectangle) {
 		    this.canvii['effects'].context.strokeStyle = "rgba(255,255,255,0.9)";
 		    this.canvii['effects'].context.lineWidth = 1;
 		    this.canvii['effects'].context.strokeRect(this.dragStartX, this.dragStartY,this.dragX-this.dragStartX, this.dragY-this.dragStartY)
-		    
+
 		}
 
 		//Draw blogic logo and frametime
@@ -1146,7 +1146,7 @@ function World() {
 		}
 	    }
 	}
-	
+
 	//This is fired when delete is pressed;
 	this.key_delete = function(){
 		$('#config').html('');
@@ -1218,7 +1218,7 @@ $(document).ready( function(){
 		var mousePos = CanvasFunctions.getMousePos(canvas, evt);
 		var mouseX = world.viewCenterX-world.canvii.width*0.5 + mousePos.x
 		var mouseY = world.viewCenterY-world.canvii.height*0.5 + mousePos.y
-		
+
 		document.editor.mouseX = mouseX;
 		document.editor.mouseY = mouseY;
 		if (mouseIsDown) {
