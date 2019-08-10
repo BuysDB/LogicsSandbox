@@ -1955,9 +1955,9 @@ function Pixel(x, y, parent, parentCRT) {
     this.keepAlive = false;
     this.isRound = true;
     this.focus = 1.8;
-    this.noiseEnabled = false;
-    this.noiseChance = 500; //Ratio of chance the pixel will light up by itself, 1 = 100% chance, 100 = 1% chance
-    this.noiseStrength= 30; //Strength of noise when light up by chance, value between 100 and 0
+    this.noiseEnabled = true;
+    this.noiseChance = 1500; //Ratio of chance the pixel will light up by itself, 1 = 100% chance, 100 = 1% chance
+    this.noiseStrength= 20; //Strength of noise when light up by chance, value between 100 and 0
 
     this.setLife = function(value){
 
@@ -2582,7 +2582,7 @@ Output.Screen = function (x,y,rotation,world) {
 	    } else {
 
 		if (this.cursorDown) {
-		    if (this.cursorTime<5 ) {
+		    if (this.cursorTime<10 ) {
 			this.putCursor();
 		    } else {
 			this.characterMatrix.changeChar( this.characterPointer.y, this.characterPointer.x,' ')
