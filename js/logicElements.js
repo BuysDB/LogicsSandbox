@@ -2085,47 +2085,94 @@ function Pixel(x, y, parent, parentCRT) {
 	    //var intensity = randInt(80,100)/100;
 	    var intensity = 0.01*this.parentCRT.getBrightness() * (this.curlife / 100);
 
-	    if (intensity>0.1) {
-		c.fillStyle = 'rgba(22,90,22, '+ intensity*0.4 +')';
-		//c.fillStyle = 'rgba(22,90,22,0.5)';
-		c.strokeStyle = 'rgba(22,90,22, '+ intensity*0.3 +')';
-		c.lineWidth =2;
-		c.beginPath();
+        // AMBER: #FFC455
 
-		c.arc( xStart , yStart, this.width*2.5*this.focus ,0,2*Math.PI, false);
+        if(this.parentCRT.color_mode==1){
+    	    if (intensity>0.1) {
+    		c.fillStyle = 'rgba(22,90,22, '+ intensity*0.4 +')';
+    		//c.fillStyle = 'rgba(22,90,22,0.5)';
+    		c.strokeStyle = 'rgba(22,90,22, '+ intensity*0.3 +')';
+    		c.lineWidth =2;
+    		c.beginPath();
 
-		c.stroke();
-		c.fill();
-		c.closePath();
-		c.beginPath();
-		c.lineWidth =0;
-		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.6 +')';
-		c.arc( xStart , yStart, this.height ,0,2*Math.PI, false);
-		c.fill();
-		c.closePath();
+    		c.arc( xStart , yStart, this.width*2.5*this.focus ,0,2*Math.PI, false);
 
-	    }
-	    if (this.isRound) {
-		c.beginPath();
-		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
-		c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  0,2*Math.PI, false);
-		c.fill();
-		c.beginPath();
-		c.fillStyle = 'rgba(241, 241, 241, '+ intensity +')';
-		c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus, 0,2*Math.PI, false);
-		c.fill();
-	    } else {
-		c.beginPath();
-		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
-		c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  this.height );
-		c.fill();
-		c.beginPath();
-		c.fillStyle = 'rgba(241, 241, 241, '+ intensity +')';
-		c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  this.height );
-		c.fill();
-	    }
+    		c.stroke();
+    		c.fill();
+    		c.closePath();
+    		c.beginPath();
+    		c.lineWidth =0;
+    		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.6 +')';
+    		c.arc( xStart , yStart, this.height ,0,2*Math.PI, false);
+    		c.fill();
+    		c.closePath();
 
-	}
+    	    }
+    	    if (this.isRound) {
+    		c.beginPath();
+    		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
+    		c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  0,2*Math.PI, false);
+    		c.fill();
+    		c.beginPath();
+    		c.fillStyle = 'rgba(241, 241, 241, '+ intensity +')';
+    		c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus, 0,2*Math.PI, false);
+    		c.fill();
+    	    } else {
+    		c.beginPath();
+    		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
+    		c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  this.height );
+    		c.fill();
+    		c.beginPath();
+    		c.fillStyle = 'rgba(241, 241, 241, '+ intensity +')';
+    		c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  this.height );
+    		c.fill();
+    	    }
+
+    	} else {
+
+            var focus_correction_factor = 0.7;
+            if (intensity>0.1) {
+            c.fillStyle = 'rgba(146,93,77, '+ intensity*0.4 +')';
+            //c.fillStyle = 'rgba(22,90,22,0.5)';
+            c.strokeStyle = 'rgba(146,93,77, '+ intensity*0.3 +')';
+            c.lineWidth =2;
+            c.beginPath();
+
+            c.arc( xStart , yStart, this.width*2.5*this.focus*focus_correction_factor ,0,2*Math.PI, false);
+
+            c.stroke();
+            c.fill();
+            c.closePath();
+            c.beginPath();
+            c.lineWidth =0;
+            c.fillStyle = 'rgba(255, 236, 90, '+ intensity*0.6 +')';
+            c.arc( xStart , yStart, this.height ,0,2*Math.PI, false);
+            c.fill();
+            c.closePath();
+
+            }
+            if (this.isRound) {
+            c.beginPath();
+            c.fillStyle = 'rgba(231, 150, 85, '+ intensity*0.8 +')';
+            c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus*focus_correction_factor,  0,2*Math.PI, false);
+            c.fill();
+            c.beginPath();
+            c.fillStyle = 'rgba(247, 236, 68, '+ intensity +')';
+            c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus*focus_correction_factor, 0,2*Math.PI, false);
+            c.fill();
+            } else {
+            c.beginPath();
+            c.fillStyle = 'rgba(231, 150, 85, '+ intensity*0.9 +')';
+            c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus*focus_correction_factor,  this.height );
+            c.fill();
+            c.beginPath();
+            c.fillStyle = 'rgba(247, 236, 68, '+ intensity +')';
+            c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus*focus_correction_factor,  this.height );
+            c.fill();
+            }
+        }
+
+        }
     }
 }
 function odd(x) {
@@ -2144,7 +2191,7 @@ function CRT(pixelsX, pixelsY, parent) {
     this.deviationX = 10; //10
     this.deviationY = 10; //49
     this.deviationFixSpeed = 0.005;
-
+    this.color_mode = 0;
     this.pixelsX = pixelsX;
     this.pixelsY = pixelsY;
     this.oddSwitch = true;
@@ -2248,12 +2295,24 @@ function CRT(pixelsX, pixelsY, parent) {
 	return this.brightness;
     }
 
+    this.set_color_mode=function(mode){
+        this.color_mode = mode;
+
+
+    }
+
     this.render = function(c){
     	c.beginPath();
     	//@todo real formula for this
     	c.rect(parent.xpos, parent.ypos, parent.pxWidth*parent.pixWidth, parent.pxHeight*parent.pixHeight );
-    	var q = 10;
-    	c.fillStyle = 'rgb('+q+', '+q+', '+q+')';
+
+        //Amber screens have a more brown background
+        if(this.color_mode==1){
+            var q = 10;
+        	c.fillStyle = 'rgb('+q+', '+q+', '+q+')';
+        } else {
+        	c.fillStyle = '#49363B';
+        }
     	c.fill();
     	for (var x in this.pixels) {
     	    for(var y in this.pixels[x]){
@@ -2419,7 +2478,7 @@ Output.Screen = function (x,y,rotation,world) {
     this.clock = 0;
 
     this.imageFront = new Image();
-    this.imageFront.src = "./images/terminal/edges.png";
+    this.imageFront.src = "./images/terminal/edges_matte_2.png";
     var parent = this;
 
     this.hit = function(x,y){
@@ -2429,24 +2488,6 @@ Output.Screen = function (x,y,rotation,world) {
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
-    this.save = function(){
-	    var data = {};
-	    data.type = ['Output','Screen'];
-	    this.e.save(data);
-	    return(data);
-    }
-
-    this.load = function(data){
-	    this.undecidedOutput = data.undecidedOutput
-    }
-
-    this.e.configure = function(me){
-	    var conf = {}
-	    conf.floatingOutput = {value:me.parent.undecidedOutput, label:'Undecided output', desciption:'Output when the result is undecided (-1 is floating)', range:{start:-1, end:1, step:1 },
-			    set:function(me, value){ me.parent.undecidedOutput  = value; }
-		    };
-	    return(conf);
-    }
 
     this.rows = 10;
     this.columns =18;
@@ -2478,6 +2519,33 @@ Output.Screen = function (x,y,rotation,world) {
     this.pxHeight = (this.rows * this.characterHeight  + this.rows-1 );
 
     this.CRT = new CRT(  this.pxWidth, this.pxHeight,  this);
+
+
+    this.save = function(){
+	    var data = {};
+	    data.type = ['Output','Screen'];
+	    this.e.save(data);
+	    return(data);
+    }
+
+
+    this.load = function(data){
+	    this.undecidedOutput = data.undecidedOutput
+        this.CRT.set_color_mode(data.color_mode);
+    }
+
+
+    this.e.configure = function(me){
+	    var conf = {}
+	    conf.floatingOutput = {value:me.parent.undecidedOutput, label:'Undecided output', desciption:'Output when the result is undecided (-1 is floating)', range:{start:-1, end:1, step:1 },
+			    set:function(me, value){ me.parent.undecidedOutput  = value; }
+		    };
+            conf.colorMode = {value:me.parent.CRT.color_mode, label:'Color mode', desciption:'0: amber, 1: green', range:{start:0, end:1, step:1 },
+    			    set:function(me, value){ me.parent.CRT.set_color_mode(value) }
+    		    };
+	    return(conf);
+    }
+
     //Draw a glass layer on layer3
     /*
     grd=canvas.layer3.createRadialGradient( this.pxWidth/10 ,this.pxHeight/10 ,10 ,this.pxWidth/10 + 20 ,this.pxHeight/10 + 20 ,250);
@@ -2712,7 +2780,22 @@ Output.Screen = function (x,y,rotation,world) {
     }
 
     //Boot sequence;
-    //this.writeWord("W"+this.CRT.pixelsX + " H"+this.CRT.pixelsY + " R"+this.rows+" C"+this.columns+"\n")
+    this.charactersPerTick = 1;
+    this.writeWord("W"+this.CRT.pixelsX + " H"+this.CRT.pixelsY + " R"+this.rows+" C"+this.columns+"\n\n")
+    this.writeWord("+--------------+\n");
+    this.writeWord("+  TERM READY  +\n");
+    this.writeWord("+--------------+\n");
+    this.writeWord("> ASCII\n");
+    this.writeWord("> ASCII CLOCK \n");
+    this.writeWord("> RESET\n");
+    this.writeWord("> X, Y PIXEL COORD");
+    this.writeWord("> PIXEL BRIGHTNESS");
+    this.writeWord("> PIXEL CLOCK\n");
+
+
+
+
+
 }
 
 function GraphicsCard(crt){
@@ -6578,7 +6661,7 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 		    }
 		    env.stroke();
 
-		
+
 			  env.shadowColor = '#000';
 			env.shadowBlur = 3;
 			env.shadowOffsetX = 1;
