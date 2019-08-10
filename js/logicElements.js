@@ -14,23 +14,17 @@ window.Settings = {
     'tickRatio':21
 
 }
-
-
 var pressedKeys = {};
-
-
 $(document).keydown(function (e) {
 
     pressedKeys[e.keyCode] = true;
     if (e.keyCode==27) {
 	world.selectNone();
     }
-
-
     if (e.keyCode!=116) {
 	e.preventDefault();
     }
-    
+
 });
 
 $(document).keyup(function (e) {
@@ -47,8 +41,6 @@ Fonts = {
 	    [ 1, 0, 1, 0 ],
 	    [ 0, 1, 1, 0 ],
 	    [ 1, 0, 1, 0 ]
-
-
 	],
 	A: [
 	    [ 0, 1, 0, 0 ],
@@ -405,7 +397,7 @@ Fonts = {
 	    [ 0, 0, 0, 0 ]
 
 	],
-	
+
 	'-': [
 	    [ 0, 0, 0, 0 ],
 	    [ 0, 0, 0, 0 ],
@@ -521,8 +513,6 @@ Fonts = {
 	    [ 0, 1, 0, 0 ],
 	    [ 0, 1, 0, 0 ],
 	    [ 1, 0, 0, 0 ]]
-
-
     }
 
 }
@@ -557,14 +547,12 @@ SHIFT_KEY_TO_ASCII = {
     53:'^',
     54:'&',
     55:'*'
-    
+
 }
 
 function randInt(min, max) {
     return( Math.floor((Math.random()*max)+1)+min );
 }
-
-
 function electronicObject(x,y,rotation,settings){
     this.xpos = x || 50;
     this.ypos = y || 50;
@@ -584,7 +572,7 @@ function electronicObject(x,y,rotation,settings){
 
 	}
     }
-    
+
     this.connectors = []
 
     if (settings.parent) {
@@ -665,13 +653,9 @@ function electronicObject(x,y,rotation,settings){
 		    canvii['element-bg'].context.fill();
 		    canvii['element-bg'].context.shadowColor = "transparent";
 		    canvii['element-bg'].context.stroke();
-		    
-		    
-		    
+
 		}
 	    }
-
-
 	    //Effects:
 	    if( canvii.updateRequired('effects') ){
 		if (this.hovering || this.selected) {
@@ -730,15 +714,13 @@ function electronicObject(x,y,rotation,settings){
 		    this.hovering = true;
 		    return(true)
 		    //this.rotationHandle.show();
-
-
 	    } else {
 		    this.hovering = false;
 	    }
 	    return(false);
 
     }
-    
+
     //This is a placeholder for objects which do not configure anything, preventing the configure object not to exist.
     this.configure = function(me){
 	var conf = {};
@@ -774,14 +756,10 @@ function electronicObject(x,y,rotation,settings){
 	}
 
     }
-
-
     this.hit = function(x,y){
 
 	    //Check if the object is hit;
 	    if( doPolygonsIntersect([{x:x-1,y:y+1},{x:x+1,y:y-1}],this.boundingCoordinates) ){
-
-
 		    //It was hit, now check if any of the connectors was hit;
 		    for(var connectorIndex in this.connectors){
 			    if (this.connectors[connectorIndex].hit(x,y)) {
@@ -794,8 +772,6 @@ function electronicObject(x,y,rotation,settings){
 
 	    }
 	    //return( this.rotationHandle.hit(x,y) )
-
-
     }
 
     this.save = function(obj){
@@ -808,10 +784,8 @@ function electronicObject(x,y,rotation,settings){
 		    obj.colorId = this.colorId;
 
 	    }
-
-
     }
-    
+
     this.load = function(data){
 
 	if (data!==undefined) {
@@ -825,7 +799,7 @@ function electronicObject(x,y,rotation,settings){
 		}
 
 	}
-	
+
     }
 
     //This function is called when the user wants to place the element somewhere
@@ -852,13 +826,9 @@ function electronicObject(x,y,rotation,settings){
 		    this.connectors[connectorIndex].renderOutline(env,x,y);
 	    }
 
-
-
     }
 
 }
-
-
 
 getColourFromGroup = function(scheme, n){
 
@@ -915,12 +885,8 @@ function Canvii(parentId,baseId){
 
     this.linkAliases = function(index, aliases){
 
-
-
 	for(aliasIndex in aliases){
 	    this[aliases[aliasIndex]] = this.canvii[index];
-
-
 	}
 
     }
@@ -998,24 +964,14 @@ function Canvii(parentId,baseId){
 	}
 
     }
-
-
     this.sortNumber = function(a,b) {
 	return a - b;
     }
-
-
-
-
 }
-
-
 offsetX = 0
 offsetY = 0
 
 CanvasFunctions = {
-
-
 
 	'getMousePos' : function (canvas, evt) {
 
@@ -1023,8 +979,6 @@ CanvasFunctions = {
 
 		x = evt.clientX - rect.left - offsetX;
 		y =  evt.clientY - rect.top - offsetY;
-
-
 		return {
 			//x: rect.left - evt.originalTarget.offsetLeft
 			//y: evt.clientY - rect.top + evt.originalTarget.offsetTop
@@ -1041,9 +995,9 @@ CanvasFunctions = {
 		return({x:x + world.viewCenterX-canvas.width*0.5, y:y + world.viewCenterY-canvas.height*0.5});
 
 	},
-	
+
 	'drawRoundedRectangle':function(ctx, x, y, width, height, radius) {
-  
+
 		if (typeof radius === "undefined") {
 		  radius = 5;
 		}
@@ -1060,8 +1014,6 @@ CanvasFunctions = {
 	      }
 
 }
-
-
 function rotateAndPaintImage ( context, image, angleInRad , positionX, positionY, axisX, axisY ) {
   context.translate( positionX, positionY );
   context.rotate( angleInRad );
@@ -1069,8 +1021,6 @@ function rotateAndPaintImage ( context, image, angleInRad , positionX, positionY
   context.rotate( -angleInRad );
   context.translate( -positionX, -positionY );
 }
-
-
 /*
 env 	Target canvas
 img 	Specifies the image, canvas, or video element to use
@@ -1084,15 +1034,11 @@ width 	Optional. The width of the image to use (stretch or reduce the image) 	Pl
 height 	Optional. The height of the image to use (stretch or reduce the image)
 */
 function LoadImageToCanvas(env, imageObj, positionX, positionY, angleInRad , axisX, axisY){
-
-
 	env.translate( positionX, positionY );
 	env.rotate( angleInRad );
 	env.drawImage( imageObj, -axisX, -axisY );
 	env.rotate( -angleInRad );
 	env.translate( -positionX, -positionY );
-
-
 
 }
 /* Rotating a poly is very usefull :)
@@ -1124,8 +1070,6 @@ function rotatePoly( coordinates, xCenter, yCenter, angle, scaleX, scaleY ){
 	return(newCoordinates)
 
 }
-
-
 function ftan(a,b){
 
     var x = Math.atan2(b,a)
@@ -1140,11 +1084,7 @@ function Coord(x,y){
 
 }
 
-
-
 document.loadedImages = {}
-
-
 
 function getShortAngle(a1, a2)
 
@@ -1155,8 +1095,6 @@ function getShortAngle(a1, a2)
 function getFullShortAngle(a1, a2) {
 	return(Math.min((2 * Math.PI) - Math.abs(a1 - a2), Math.abs(a1 - a2)))
 }
-
-
 function DriveRoutePoint(x, y, isFinal){
 
 	this.x = x;
@@ -1169,11 +1107,7 @@ function DriveRoutePoint(x, y, isFinal){
 		env.fill()
 
 	}
-
-
 }
-
-
 function subdivideOver(xStart, yStart, xEnd, yEnd, minDistance){
 
 	var angle = Math.atan2(xEnd - xStart, yEnd - yStart)
@@ -1187,8 +1121,6 @@ function subdivideOver(xStart, yStart, xEnd, yEnd, minDistance){
 	}
 	return(coords)
 }
-
-
 function State() {
 
 	this.value = 0;
@@ -1213,8 +1145,6 @@ function State() {
 		}
 
 	}
-
-
 	this.getFloating = function(){
 		return(this.value)
 	}
@@ -1275,25 +1205,23 @@ function State() {
  * edge type: 1: rising, 0: falling
  */
 function EdgeTrigger(state,edgeType){
-    
+
     this.state = state;
     this.previous = new State();
     this.edgeType = edgeType;
     this.triggered = false;
-    
+
     this.update = function(){
 	this.previous.tick();
 	this.triggered = false;
 	if ( (this.previous.get()==1 || this.previous.get()==0)) {
 
 	    if (this.state.get()!= this.previous.get() && (this.state.get()==1 || this.state.get()==0) && this.state.get()==this.edgeType) {
-		
+
 		if (this.state.get()!=this.previous.get()) {
-		    this.triggered = true;	
+		    this.triggered = true;
 		}
-		
-		
-		
+
 	    }
 	}
 	//Set immediate;
@@ -1302,15 +1230,13 @@ function EdgeTrigger(state,edgeType){
 	}
 	return(this.triggered);
     }
-    
+
     this.setEdgeType = function(type){
 	if (type==0 || type==1) {
 	    this.edgeType = type;
 	}
     }
 }
-
-
 function Connector(x,y,rotation,parent,settings){
 
 	/*	Settings object:
@@ -1326,7 +1252,7 @@ function Connector(x,y,rotation,parent,settings){
 	} else {
 	    this.audioSource = settings.audioSource;
 	}
-	
+
 	this.rotation = rotation || 0;
 	this.label = "" || settings.label;
 	this.radius = 5;
@@ -1404,8 +1330,6 @@ function Connector(x,y,rotation,parent,settings){
 		    } else {
 			this.getState(bit).set(0);
 		    }
-
-
 	    }
 	    if (Math.pow(2,this.lines)<val) {
 		return(false)
@@ -1437,8 +1361,6 @@ function Connector(x,y,rotation,parent,settings){
 	    } else {
 		this.state.tick();
 	    }
-
-
 	}
 
 	this.hover = function(x,y){
@@ -1461,8 +1383,6 @@ function Connector(x,y,rotation,parent,settings){
 
 		return(this.parent.ypos + this.y)
 	}
-
-
 	//It is convenient to select "wire" when a connector is clicked
 	this.click = function(x,y){
 		document.editor.setSelectedCatalogObject('Wiring_Wire');
@@ -1477,12 +1397,12 @@ function Connector(x,y,rotation,parent,settings){
 	    env.arc(x+this.x, y+this.y, this.radius, 0, 2 * Math.PI, false);
 	    env.stroke();
 	}
-	
+
 	this.connectedWires = [];
 	this.registerWire = function(wire){
 	    this.connectedWires.push( wire );
 	}
-	
+
 	this.deRegisterWire = function(wire){
 	    for (var wireIndex in this.connectedWires) {
 		if( wire.worldId == this.connectedWires[wireIndex].worldId ){
@@ -1490,12 +1410,10 @@ function Connector(x,y,rotation,parent,settings){
 
 		    return(true)
 		}
-		
+
 	    }
 	    return(false)
 	}
-	
-	
 	this.reconnectAudio = function(){
 	    for (var wireIndex in this.connectedWires) {
 		this.connectedWires[wireIndex].reconnectAudio();
@@ -1509,8 +1427,6 @@ function Connector(x,y,rotation,parent,settings){
 	 * 3:['effects'] textual labels
 	 */
 	this.render = function(canvii){
-
-
 	    if (this.lines==1) {
 		/* The base of the connector: */
 		if( canvii.updateRequired('element-bg') ){
@@ -1527,14 +1443,12 @@ function Connector(x,y,rotation,parent,settings){
 		    canvii['element-bg'].context.lineWidth = 1;
 		    canvii['element-bg'].context.strokeStyle = '#003300';
 		    canvii['element-bg'].context.stroke();
-		    
+
 		    if (this.connectionType==1) {
 			canvii['element-bg'].context.fillStyle = '#222';
 		    } else if(this.connectionType==2){
 			canvii['element-bg'].context.fillStyle = '#F22';
 		    }
-		    
-		    
 		    canvii['element-bg'].context.fill();
 		    canvii['element-bg'].context.shadowColor = "transparent";
 
@@ -1548,8 +1462,6 @@ function Connector(x,y,rotation,parent,settings){
 		    if (this.hovering) {
 			    canvii['connector-fg'].context.fillStyle = '#FFF';
 		    } else {
-			    
-			      
 			    if (this.connectionType==1) {
 				var state = this.state.get();
 				if (state == 1) {
@@ -1562,8 +1474,6 @@ function Connector(x,y,rotation,parent,settings){
 			    } else if(this.connectionType==2){
 				canvii['connector-fg'].context.fillStyle = '#F22';
 			    }
-		    
-		    
 
 		    }
 		    canvii['connector-fg'].context.fill();
@@ -1587,8 +1497,6 @@ function Connector(x,y,rotation,parent,settings){
 
 		    //Max of this amounts of pins per circle:
 		    var maxPinsPerCircle = 8;
-
-
 		    //Render the background of the connector if neccesary:
 		    if( canvii.updateRequired('element-bg') ){
 			canvii['element-bg'].context.beginPath();
@@ -1647,8 +1555,6 @@ function Connector(x,y,rotation,parent,settings){
 		    canvii['effects'].context.strokeStyle = '#FFF';
 		    canvii['effects'].context.stroke();
 		}
-
-
 		if (this.label && this.labelEnergy>0) {
 
 		    var r = Math.atan2(this.x - this.label.length*(this.parent.height/this.parent.width),this.y);
@@ -1673,21 +1579,19 @@ function Connector(x,y,rotation,parent,settings){
 		    } else if(this.connectionType==2){
 			canvii['effects'].context.fillText(this.label + '[AUDIO]' ,this.getX()+Math.sin(r)*widthMod-offsetX,this.getY()+Math.cos(r)*heightMod);
 		    }
-		    
+
 		    this.labelEnergy--;
 		}
 	    }
-	    
+
 	    if (this.hovering) {
-		
+
 		this.hoverTime--;
 		if (this.hoverTime==0) {
 		    this.hovering = 0;
 		}
 	    }
 	}
-
-
 }
 
 /**
@@ -1704,8 +1608,6 @@ function doPolygonsIntersect (a, b) {
 	return(false)
     }
     var polygons = [a, b];
-
-
     var minA, maxA, projected, i, i1, j, minB, maxB;
 
     for (i = 0; i < polygons.length; i++) {
@@ -1797,8 +1699,6 @@ function RotationHandle(parent){
 		env.fillStyle = '#000';
 		env.arc(this.getX(), this.getY(), this.radius*0.5, 0, 2 * Math.PI, false);
 		env.fill();
-
-
 	}
 
 	this.hit = function(x,y){
@@ -1836,8 +1736,6 @@ function RotationHandle(parent){
 
 	}
 }
-
-
 
 function ScreenCharacter(symbolCode,x,y,width,height) {
 
@@ -1887,24 +1785,16 @@ function ScreenCharacter(symbolCode,x,y,width,height) {
 	    }
 	}
 
-
-
     }
 
     this.tick = function(crt){
 
-
-
     }
-
-
 
     this.render = function(c, x, y, width, height){
 
 	//
 	//c.strokeStyle('#009900');
-
-
 	var bitmap = Fonts.ixi[this.symbolCode];
 	if (Fonts.ixi[this.symbolCode]!=undefined) {
 
@@ -1912,19 +1802,13 @@ function ScreenCharacter(symbolCode,x,y,width,height) {
 	    var heigthOfBitmap=bitmap[0].length;
 	    var pixWidth = 2;
 	    var pixHeight = 2;
-
-
 	    for (var row=0; row<bitmap.length; row++) {
 		for (var col=0; col<bitmap[row].length; col++) {
 
 		    if (bitmap[row][col]==1) {
-
-
 			var xStart = x+((col/widthOfBitmap)*width);
 			var yStart = y+((row/heigthOfBitmap)*height);
 			var intensity = randInt(80,100)/100;
-
-
 			c.fillStyle = 'rgba(22,90,22, '+ intensity*0.4 +')';
 			//c.fillStyle = 'rgba(22,90,22,0.5)';
 			c.strokeStyle = 'rgba(22,90,22, '+ intensity*0.3 +')';
@@ -1936,16 +1820,12 @@ function ScreenCharacter(symbolCode,x,y,width,height) {
 			c.stroke();
 			c.fill();
 			c.closePath();
-
-
 			c.beginPath();
 			c.lineWidth =0;
 			c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.6 +')';
 			c.arc( xStart , yStart, pixHeight ,0,2*Math.PI, false);
 			c.fill();
 			c.closePath();
-
-
 			c.beginPath();
 			c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
 			c.rect( xStart - 0.5*pixWidth, yStart - 0.5*pixHeight,  pixWidth,  pixHeight );
@@ -1998,8 +1878,6 @@ function CharacterMatrix(rows, cols) {
 	}
 
     }
-
-
     //Function to shift the matrix
     this.shift = function(){
 
@@ -2015,8 +1893,6 @@ function CharacterMatrix(rows, cols) {
 	//Remove the last
 	//this.matrix.shift();
        this.matrix.shift();
-
-
     }
 
     //Function to retrieve char
@@ -2025,7 +1901,7 @@ function CharacterMatrix(rows, cols) {
 	return( this.matrix[row][column] )
 
     }
-    
+
     this.clear = function(){
 	for(var i in this.matrix){
 	    for(var j in this.matrix[i]){
@@ -2033,8 +1909,6 @@ function CharacterMatrix(rows, cols) {
 	    }
 	}
     }
-
-
 }
 
 //CharacterMatrix tests:
@@ -2046,25 +1920,15 @@ function CharacterMatrixTester() {
     var expected = 'H';
     matrix.setChar( 1, 1, new ScreenCharacter(expected));
     var retrieved =matrix.getChar(1,1).getSymbolCode();
-
-
     if (expected==retrieved) {
-
-
     } else {
-
-
     }
 
     //Shift the register by one and check again:
     matrix.shift();
     var retrieved =matrix.getChar(0,1).getSymbolCode();
     if (expected==retrieved) {
-
-
     } else {
-
-
     }
 }
 new CharacterMatrixTester();
@@ -2081,8 +1945,6 @@ function Pixel(x, y, parent, parentCRT) {
     this.parentCRT = parentCRT;
     this.xpos = x;
     this.ypos = y;
-
-
     this.life = 0;
     this.curlife = 0;
     this.diePerTick = 50;
@@ -2107,11 +1969,7 @@ function Pixel(x, y, parent, parentCRT) {
 	this.curlife = Math.max(0, Math.min( value, this.fitness));
 
     }
-
-
     this.tick = function(){
-
-
 
 	if (this.parentCRT.enabled==false) {
 	    this.keepAlive=false;
@@ -2120,18 +1978,12 @@ function Pixel(x, y, parent, parentCRT) {
 
 	}
 
-
-
 	if (this.keepAlive==true) {
 	    this.justAwake = true;
 	    this.curlife = this.awakeTarget;
 	    //this.wake();
 	}
-
-
 	if (this.dead==false) {
-
-
 	    if (this.justAwake==false) {
 		//this.life = this.life - this.diePerTick;
 		this.life = 0;
@@ -2142,12 +1994,10 @@ function Pixel(x, y, parent, parentCRT) {
 		this.setCurlife(  this.curlife -  0.1*this.curlife );
 
 		this.curlife -= randInt(0.5*this.diePerTick, this.diePerTick)
-		
+
 		if (this.curlife<=5) {
 		    this.dead = true;
 		}
-
-		
 
 	    } else {
 		//Flicker a little?
@@ -2158,8 +2008,6 @@ function Pixel(x, y, parent, parentCRT) {
 	    if (this.curlife<this.life) {
 		this.curlife += randInt(5, 10);
 	    }
-
-
 	} else {
 
 	    if ( this.noiseEnabled  && this.parentCRT.enabled==true && Math.floor(this.noiseChance*Math.random())==0) {
@@ -2187,7 +2035,7 @@ function Pixel(x, y, parent, parentCRT) {
 
     //Enable the pixel untill disable
     this.enable = function(v){
-	
+
 	if (v!=undefined) {
 	    this.life = v;
 	    this.curlife = v;
@@ -2218,18 +2066,12 @@ function Pixel(x, y, parent, parentCRT) {
 	this.fitness = value;
 
     }
-
-
     this.render = function(c){
 
 	if (this.dead==false) {
 
-
-
 	    var xStart = this.xpos + parent.xpos + this.parentCRT.deviationX;
 	    var yStart = this.ypos + parent.ypos + this.parentCRT.deviationY;
-
-
 	    //var intensity = randInt(80,100)/100;
 	    var intensity = 0.01*this.parentCRT.getBrightness() * (this.curlife / 100);
 
@@ -2245,8 +2087,6 @@ function Pixel(x, y, parent, parentCRT) {
 		c.stroke();
 		c.fill();
 		c.closePath();
-
-
 		c.beginPath();
 		c.lineWidth =0;
 		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.6 +')';
@@ -2255,15 +2095,11 @@ function Pixel(x, y, parent, parentCRT) {
 		c.closePath();
 
 	    }
-
-
 	    if (this.isRound) {
 		c.beginPath();
 		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
 		c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  0,2*Math.PI, false);
 		c.fill();
-
-
 		c.beginPath();
 		c.fillStyle = 'rgba(241, 241, 241, '+ intensity +')';
 		c.arc( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus, 0,2*Math.PI, false);
@@ -2273,29 +2109,19 @@ function Pixel(x, y, parent, parentCRT) {
 		c.fillStyle = 'rgba(172, 231, 172, '+ intensity*0.8 +')';
 		c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  this.height );
 		c.fill();
-
-
 		c.beginPath();
 		c.fillStyle = 'rgba(241, 241, 241, '+ intensity +')';
 		c.rect( xStart - 0.5*this.width, yStart - 0.5*this.height,  this.width*this.focus,  this.height );
 		c.fill();
 	    }
 
-
-
 	}
     }
-
-
 }
 function odd(x) {
     return ( x & 1 ) ? true : false;
   }
-
-
 function CRT(pixelsX, pixelsY, parent) {
-
-
 
     this.enabled = true;
     this.scanLinePosition = 5;
@@ -2303,11 +2129,7 @@ function CRT(pixelsX, pixelsY, parent) {
     //Quick test:
     this.brightness = 30;
     this.focus = 1.1;
-
-
     this.parent = parent;
-
-
     //This is the relative placement of the pixels on the screen ;q
     this.deviationX = 10; //10
     this.deviationY = 10; //49
@@ -2393,8 +2215,6 @@ function CRT(pixelsX, pixelsY, parent) {
 		var r = Math.sqrt(Math.pow(xc-xu,2) + Math.pow(yc-yu,2));
 		var xdist = xu*(1+this.k1*Math.pow(r,2) + this.k2*Math.pow(r,4) ) + (this.p2*(Math.pow(r,2) + 2*this.p1*xu*yu))*(1+this.p3*Math.pow(r,2)+this.p4*Math.pow(r,4))
 		var ydist = yu*(1+this.k1*Math.pow(r,2) + this.k2*Math.pow(r,4) ) + (this.p1*(Math.pow(r,2) + 2*this.p2*xu*yu))*(1+this.p3*Math.pow(r,2)+this.p4*Math.pow(r,4))
-
-
 		//var xdist = xp + 2*this.p1*yp+this.p2*(r*r + 2*xp*xp);
 		//var ydist = yp + this.p1*(r*r+2*yp*yp) + 2*this.p2*xp;
 
@@ -2419,8 +2239,6 @@ function CRT(pixelsX, pixelsY, parent) {
     }
 
     this.render = function(c){
-
-
 	c.beginPath();
 	//@todo real formula for this
 	c.rect(parent.xpos, parent.ypos, parent.pxWidth*parent.pixWidth, parent.pxHeight*parent.pixHeight );
@@ -2429,8 +2247,6 @@ function CRT(pixelsX, pixelsY, parent) {
 	c.fill();
 	for (var x in this.pixels) {
 	    for(var y in this.pixels[x]){
-
-
 		this.pixels[x][y].render(c);
 	    }
 
@@ -2440,17 +2256,11 @@ function CRT(pixelsX, pixelsY, parent) {
 	    //this.pixels[0][this.scanLinePosition].wake();
 	}
 
-
-
     }
 
     this.tick = function(){
 
-
-
 	for (var x in this.pixels) {
-
-
 	    for(var y in this.pixels[x]){
 		this.pixels[x][y].tick();
 
@@ -2476,8 +2286,6 @@ function CRT(pixelsX, pixelsY, parent) {
     }
 
     this.plotPixel = function(x,y){
-
-
 	x = Math.round(x);
 	y = Math.round(y);
 
@@ -2509,8 +2317,6 @@ function CRT(pixelsX, pixelsY, parent) {
 	}
     }
 
-
-
     this.plotGreyPixel = function(x,y,value){
 
 	x = Math.round(x);
@@ -2536,11 +2342,9 @@ function CRT(pixelsX, pixelsY, parent) {
 
 		this.pixels[x][y].disable();
 	    }
-
-
 	}
     }
-    
+
     //Clear all pixels
     this.reset = function(){
 	for (var x in this.pixels) {
@@ -2549,7 +2353,7 @@ function CRT(pixelsX, pixelsY, parent) {
 	    }
 	}
     }
-    
+
     this.enablePixel = function(x,y,v){
 	x = Math.round(x);
 	y = Math.round(y);
@@ -2583,8 +2387,6 @@ function CRT(pixelsX, pixelsY, parent) {
 	this.setBrightness( Math.max(1, this.getBrightness() - 10 ));
 
     }
-
-
 }
 
 Output.Screen = function (x,y,rotation,world) {
@@ -2602,7 +2404,7 @@ Output.Screen = function (x,y,rotation,world) {
     this.e.connectors['Y'] = new Connector(this.ioRXstart+2*12 +90, this.ioY, 0, this.e, {connectorType:1,lines:8,label:'Y'});
     this.e.connectors['Pval'] = new Connector(this.ioRXstart+2*12 +105, this.ioY, 0, this.e, {connectorType:1, lines:4, label:'Pixel value'});
     this.e.connectors['Pclock'] = new Connector(this.ioRXstart+2*12 +120, this.ioY, 0, this.e, {connectorType:1,label:'Pixel clock'});
-    
+
     this.clock = 0;
     this.imageFrontLoaded = false;
     this.imageFront = new Image();
@@ -2611,10 +2413,6 @@ Output.Screen = function (x,y,rotation,world) {
     this.imageFront.onload = function(){
 	    parent.imageFrontLoaded = true;
     }
-
-
-
-
     this.hit = function(x,y){
 	    return( this.e.hit(x,y) );
     }
@@ -2658,8 +2456,6 @@ Output.Screen = function (x,y,rotation,world) {
     this.characterBuffer = [];
     this.characterMatrix = new CharacterMatrix(this.rows, this.columns);
     this.characterPointer = {x:0, y:0};
-
-
     this.characterWidth = 4;
     this.characterHeight = 6;
     this.pixWidth = 3;
@@ -2672,10 +2468,6 @@ Output.Screen = function (x,y,rotation,world) {
     this.pxHeight = (this.rows * this.characterHeight  + this.rows-1 );
 
     this.CRT = new CRT(  this.pxWidth, this.pxHeight,  this);
-
-
-
-
     //Draw a glass layer on layer3
     /*
     grd=canvas.layer3.createRadialGradient( this.pxWidth/10 ,this.pxHeight/10 ,10 ,this.pxWidth/10 + 20 ,this.pxHeight/10 + 20 ,250);
@@ -2696,8 +2488,6 @@ Output.Screen = function (x,y,rotation,world) {
     this.monitorSideEdgeWidth = 0;
     this.monitorHeight = this.pxHeight;
     this.monitorWidth =  this.pxWidth;
-
-
     this.emptyBuffer = function(){
 
 	this.characterBuffer = [];
@@ -2724,11 +2514,7 @@ Output.Screen = function (x,y,rotation,world) {
 	    }
 	}
 
-
-
     }
-
-
     this.cursorTime = 0;
     this.cursorDown = false;
     this.cursorInit = function(){
@@ -2736,8 +2522,6 @@ Output.Screen = function (x,y,rotation,world) {
 	this.cursorDown = true;
 
     }
-
-
     /**
      *  The basic tick function
      *
@@ -2745,19 +2529,17 @@ Output.Screen = function (x,y,rotation,world) {
     this.cursorInit()
     this.tick = function(t){
 	this.e.tick();
-	
-	
 	if (this.e.connectors['Pclock'].state.get()==1) {
 	    this.CRT.enablePixel(this.e.connectors['X'].getIntValue(),this.e.connectors['Y'].getIntValue(), (this.e.connectors['Pval'].getIntValue()/Math.pow(2,this.e.connectors['Pval'].lines)) * 100)
-	    
+
 	}
-	
+
 	var byteData = 0;
 
 	if( this.e.connectors['C'].state.get()==0 && this.clock==1 ){
 	 this.clock = 0;
 	}
-	
+
 	if( this.e.connectors['R'].state.get()==1){
 	 this.emptyBuffer();
 	 this.characterMatrix.clear();
@@ -2765,8 +2547,6 @@ Output.Screen = function (x,y,rotation,world) {
 	 this.characterPointer.x = 0;
 	 this.characterPointer.y = 0;
 	}
-	
-
 
 	if( this.e.connectors['C'].state.get()==1 && this.clock==0 ){
 	    for(var bit=0; bit<7; bit++){
@@ -2781,11 +2561,7 @@ Output.Screen = function (x,y,rotation,world) {
 	    this.writeChar(character);
 	    this.clock = 1;
 	}
-
-
 	if (t==0) {
-
-
 	    this.xpos = this.e.xpos - 125;
 	    this.ypos = this.e.ypos - 105;
 
@@ -2794,8 +2570,6 @@ Output.Screen = function (x,y,rotation,world) {
 	    if (this.cursorTime>25) {
 		this.cursorTime=0;
 	    }
-
-
 	    if (this.characterBuffer.length>0) {
 
 		var charactersToAdd = Math.min(this.characterBuffer.length, this.charactersPerTick)
@@ -2803,11 +2577,7 @@ Output.Screen = function (x,y,rotation,world) {
 
 		    var symbolToAdd = this.characterBuffer.pop();
 		    this.putChar(symbolToAdd);
-
-
 		}
-
-
 
 	    } else {
 
@@ -2818,10 +2588,6 @@ Output.Screen = function (x,y,rotation,world) {
 			this.characterMatrix.changeChar( this.characterPointer.y, this.characterPointer.x,' ')
 		    }
 		}
-
-
-
-
 	    }
 	    this.CRT.tick();
 
@@ -2851,8 +2617,6 @@ Output.Screen = function (x,y,rotation,world) {
 	//this.characterMatrix.shift();
 	this.characterPointer.x = 0;
 	this.pointerIncrement(0,1);
-
-
 
     }
 
@@ -2909,15 +2673,11 @@ Output.Screen = function (x,y,rotation,world) {
 	}
 	this.characterMatrix.setChar( this.characterPointer.y, this.characterPointer.x, char);
 	this.pointerIncrement(1,0);
-
-
     }
 
     this.putChar = function(char){
 
 	this.putCharToMatrix( char );
-
-
     }
 
     this.writeWord = function( string ){
@@ -2934,8 +2694,6 @@ Output.Screen = function (x,y,rotation,world) {
 
     //Boot sequence;
     //this.writeWord("W"+this.CRT.pixelsX + " H"+this.CRT.pixelsY + " R"+this.rows+" C"+this.columns+"\n")
-
-
 }
 
 function GraphicsCard(crt){
@@ -3006,13 +2764,7 @@ function GraphicsCard(crt){
 		}
 	    }
 	}
-
-
-
-
     }
-
-
 
 }
 
@@ -3026,33 +2778,31 @@ function OS
 Wiring = {}
 
 function WireRoutingPoint(x,y,parentWire){
-    
+
     this.x = x;
     this.y = y;
     this.parent = parentWire;
-    
+
 }
 
 function WireRoutingPoints(parent){
-    
+
     this.parent = parent;
     this.routingPoints = [];
     this.addRoutingPoint = function(x,y,index){
 	//Find the index
-	
+
 	this.routingPoints.splice(index,0,new WireRoutingPoint(x,y,this.parent));
-	
+
     }
-    
+
 }
-
-
 Wiring.Wire = function(x, y, rotation, world, clicks){
 
 	this.world = world;
 	this.lines = 1;// We default to one state.
 	this.connectedLines = 1; //It is possible that the busses don't align properly, this value holds the amount of lines which are connected.
-	
+
 	this.hovering = false;
 	this.hoverColor = '#FFF';
 	this.hoveringNode = -1; //Index of node which is hovered
@@ -3062,8 +2812,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 	this.colourGroup = 0;
 	this.colourGroups = BuysDB_ColorScheme.groups['8_norm'];
 	this.nodesEditted = false; //When this is true the polyline will not autoconfigure.
-	
-	
 	this.getState = function(line){
 	    //@todo make safe
 	    return(this.states[line]);
@@ -3081,19 +2829,15 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 	}
 
 	this.calculatePoly = function(){
-
-		
 		if(this.nodesEditted){
 		    this.centerLine[0].x = this.from.getX()
 		    this.centerLine[0].y = this.from.getY();
 		    this.centerLine[this.centerLine.length-1].x = this.to.getX()
 		    this.centerLine[this.centerLine.length-1].y = this.to.getY()
-		    
+
 		    this.boundingCoordinates = this.createThickenedPoly(this.centerLine);
 		    return(false)
 		}
-		
-
 		var dx = this.to.getX() - this.from.getX();
 		var dy = this.to.getY() - this.from.getY();
 
@@ -3105,27 +2849,23 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		    var yfactor = 0.25;
 
 		}
-
-
 		var centerX = this.from.getX() + 0.5*dx;
 		var centerY = this.from.getY() + 0.5*dy;
 		var c1x =  this.from.getX() + dx*xfactor;
 		var c1y =  this.from.getY() + dy*yfactor;
-
-
 		this.centerLine = [];
 		this.centerLine[0] = {x:this.from.getX(), y:this.from.getY()};
 		this.centerLine[1] = {x:c1x, y:c1y };
 		this.centerLine[2] = {x:centerX, y:centerY };
 		this.centerLine[3] = {x:this.to.getX()-dx*xfactor, y:this.to.getY()-dy*yfactor };
 		this.centerLine[4] = {x:this.to.getX(), y:this.to.getY()};
-	    
+
 		this.boundingCoordinates = this.createThickenedPoly(this.centerLine);
 
 	}
 
 	this.createThickenedPoly = function(poly){
-	    
+
 	    var len = poly.length;
 
 	    //Calculate alpha for all nodes;
@@ -3149,7 +2889,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		}
 
 	    }
-	    
+
 	    //Huh
 	    //this.centerLine = poly;
 
@@ -3173,8 +2913,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		    this.states.push(new State());
 		}
 		//Create a reference to the first line state: (For support for single line based devices....)
-
-		
 		this.sourceConnector = false;
 		if (this.from.connectorType==1 && this.to.connectorType==2) {
 		    this.sourceConnector = this.to;
@@ -3183,8 +2921,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		    this.sourceConnector = this.from;
 		    this.targetConnector = this.to;
 		}
-		
-		
 		if (this.sourceConnector.parent != undefined){
 		    if(this.sourceConnector.parent.parent != undefined) {
 			//this.colourGroup = sourceConnector.parent.parent.worldId%this.colourGroups.length;
@@ -3192,9 +2928,9 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 
 		    }
 		}
-		
+
 		this.reconnectAudio();
-		
+
 		this.state = this.states[0];
 
 		this.width = Math.sqrt(this.lines) + 2;
@@ -3202,29 +2938,23 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		   this.targetConnector.registerWire(this);
 		   this.sourceConnector.registerWire(this);
 		}
-		
-		
 	    }
 
 	}
-	
+
 	this.reconnectAudio = function(){
 	    if (this.from.connectionType==2 && this.to.connectionType==2) { //Check wether both the in and output are audio connectors
 		if( this.targetConnector.audioTarget != undefined && this.sourceConnector.audioSource != undefined ){
-
-
 		    this.sourceConnector.audioSource.connect( this.targetConnector.audioTarget );
 		} else {
 		    console.warn('No connection possible; audio source or target missing');
 		}
 	    }
 	}
-
-
 	this.multiclick = 2;
-	
+
 	this.multiclickRender = function(canvii, x0,y0,x1,y1){
-    
+
 	    canvii['effects'].context.strokeStyle = '#AAA'
 	    canvii['effects'].context.lineWidth=2;
 	    canvii['effects'].context.beginPath();
@@ -3236,14 +2966,10 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 	    canvii['effects'].context.beginPath();
 	    canvii['effects'].context.arc(x1,y1,5,0,2*Math.PI)
 	    canvii['effects'].context.stroke();
-
-	
 	}
-	
+
 	if (world && clicks) {
 		//Find if there are suitable objects to connect;
-
-
 		var from = world.objectAt(clicks[0].x,clicks[0].y);
 		var to =   world.objectAt(clicks[1].x,clicks[1].y);
 
@@ -3261,17 +2987,11 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		    } else {
 
 		    }
-
-
 		    this.killMe = true;
 
 		}
 
 	}
-
-
-
-
 	this.render = function(canvii){
 
 		/** WIRE renderer:
@@ -3339,10 +3059,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 			    canvii['wire-bg'].context.fill();
 			    canvii['wire-bg'].context.shadowColor = 'transparent';
 			}
-
-
-
-
 		// Wire foreground rendering:
 		if( canvii.updateRequired('wire-fg') ){
 
@@ -3355,8 +3071,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 			    }
 		    }
 		    canvii['wire-fg'].context.lineTo(this.boundingCoordinates[0].x,this.boundingCoordinates[0].y)
-
-
 		    if (this.hovering) {
 			//@TODO: this is a violation; hovering should be rendered on the effects layer.
 			canvii['wire-fg'].context.strokeStyle = this.hoverColor;
@@ -3379,25 +3093,19 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 			var cnv = canvii['wire-fg'].context;
 			cnv.strokeStyle = '#F22';
 			cnv.lineWidth=1;
-
-
 			for(var i in this.centerLine){
 
 			    cnv.beginPath();
 			    cnv.moveTo(this.centerLine[i].x + this.width*Math.sin(this.centerLine[i].alpha+0.5*Math.PI), this.centerLine[i].y + this.width*Math.cos(this.centerLine[i].alpha+0.5*Math.PI));
 			    cnv.lineTo(this.centerLine[i].x + this.width*Math.sin(this.centerLine[i].alpha-0.5*Math.PI), this.centerLine[i].y + this.width*Math.cos(this.centerLine[i].alpha-0.5*Math.PI));
-
-
 			}
 
 			//cnv.stroke();
-			
-
 			/* Markers: */
 			if (this.hovering) {
 
 			    for(var i in this.centerLine){
-				
+
 				if (this.hoveringNode == i) {
 				    cnv.fillStyle = '#F22';
 				    cnv.strokeStyle = '#F22';
@@ -3405,7 +3113,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 				    cnv.fillStyle = '#222';
 				    cnv.strokeStyle = '#222';
 				}
-				
+
 				cnv.beginPath();
 				cnv.arc(this.centerLine[i].x, this.centerLine[i].y, 2, 0, 2 * Math.PI, false);
 				cnv.fill();
@@ -3414,7 +3122,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 				cnv.stroke();
 			    }
 			}
-			
+
 			var val = this.states[0].get();
 			if (val) {
 			    cnv.strokeStyle = '#2F2';
@@ -3434,11 +3142,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		}
 		}
 
-
-
 	}
-
-
 	this.hit = function(x,y){
 
 		//Check if the object is hit;
@@ -3451,7 +3155,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 
 		if (this.hit(x,y)) {
 			this.calculatePoly();
-			
+
 			//Calculate wether there is a hit with a marker:
 			this.hoveringNode = -1;
 			for(var i in this.centerLine){
@@ -3459,24 +3163,22 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 				this.hoveringNode = i;
 				this.hovering = true;
 			    }
-			    
+
 			}
 			return(true)
-			    
-			
 		} else {
 			this.hovering = false;
 			this.hoveringNode = -1;
 		}
 
 	}
-	
+
 	this.drag = function(prevX,prevY,newX,newY){
 	    if (this.hovering&&this.hoveringNode!=-1) {
 		this.centerLine[this.hoveringNode].x = newX;
 		this.centerLine[this.hoveringNode].y = newY;
 		this.nodesEditted = true;
-		
+
 	    }
 	}
 
@@ -3502,7 +3204,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 			    //this.to.state.set(-1);
 			}
 		}
-		
+
 		if (this.targetConnector!=undefined) {
 		    this.targetConnector.deRegisterWire(this);
 		}
@@ -3518,7 +3220,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 			}
 		    }
 		}
-		
+
 	}
 
 	this.tick = function(){
@@ -3571,8 +3273,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		    //this.to.state.set(this.state.getFloating());
 		}
 
-
-
 	}
 	this.save = function(){
 		var data = {};
@@ -3592,8 +3292,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		var to = this.world.objectAt(data.to.x, data.to.y);
 		if( this.validateConnect(from) && this.validateConnect(to) ){
 
-
-
 			if (data.colourGroup) {
 			    this.colourGroup = data.colourGroup;
 			}
@@ -3607,11 +3305,7 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 
 			this.killMe = true;
 
-
-
 		}
-
-
 	}
 
 	this.configure = function(me){
@@ -3622,8 +3316,6 @@ Wiring.Wire = function(x, y, rotation, world, clicks){
 		return(conf);
 	}
 };
-
-
 BasicGates = {}
 
 BasicGates.Not = function(x,y,rotation, world){
@@ -3651,8 +3343,6 @@ BasicGates.Not = function(x,y,rotation, world){
 		}
 	    }
 	}
-
-
 	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
 
@@ -3667,7 +3357,7 @@ BasicGates.Not = function(x,y,rotation, world){
 		} else {
 			this.e.connectors['out'].state.set(this.undecidedOutput);
 		}//
-		
+
 	    //this.e.connectors['out'].state.set(1-state);
 
 	}
@@ -3683,7 +3373,7 @@ BasicGates.Not = function(x,y,rotation, world){
 	    if (data.undecidedOutput==0 || data.undecidedOutput==1 || data.undecidedOutput==1) {
 		this.undecidedOutput = data.undecided
 	    }
-		
+
 	}
 
 	this.e.configure = function(me){
@@ -3709,8 +3399,6 @@ BasicGates.And = function(x,y,rotation, world){
 	this.imgObjGate.onload = function(){
 		parent.imageLoadedGate = true;
 	}
-
-
 
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
@@ -3743,8 +3431,6 @@ BasicGates.And = function(x,y,rotation, world){
 		} else {
 			this.e.connectors['out'].state.set(0);
 		}
-
-
 	}
 	this.save = function(){
 		var data = {};
@@ -3816,8 +3502,6 @@ BasicGates.Nand = function(x,y,rotation, world){
 	this.imgObjGate.onload = function(){
 		parent.imageLoadedGate = true;
 	}
-
-
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
@@ -3838,7 +3522,7 @@ BasicGates.Nand = function(x,y,rotation, world){
 		this.e.tick();
 		var stateA = this.e.connectors['A'].state.getFloating();
 		var stateB = this.e.connectors['B'].state.getFloating();
-		
+
 		this.e.connectors['out'].state.set(Math.min(1,1-(stateA*stateB)+0.1));
     //
 		if ( stateA==1 && stateB==1 ){
@@ -3850,8 +3534,6 @@ BasicGates.Nand = function(x,y,rotation, world){
 			this.e.connectors['out'].state.set(1);
 		}
 		//
-
-
 	}
 	this.save = function(){
 		var data = {};
@@ -3874,8 +3556,6 @@ BasicGates.Nand = function(x,y,rotation, world){
 
 }
 
-
-
 BasicGates.Or = function(x,y,rotation, world){
 
 	this.undecidedOutput = -1;
@@ -3889,8 +3569,6 @@ BasicGates.Or = function(x,y,rotation, world){
 	this.imgObjGate.onload = function(){
 		parent.imageLoadedGate = true;
 	}
-
-
 
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
@@ -3912,7 +3590,7 @@ BasicGates.Or = function(x,y,rotation, world){
 		this.e.tick();
 		//var stateA = this.e.connectors['A'].state.getFloating();
 		//var stateB = this.e.connectors['B'].state.getFloating();
-    
+
 		if ( (stateA==1 && stateB==0) || (stateB==1 && stateA==0) || (stateB==1 && stateA==1) ){
 			this.e.connectors['out'].state.set(1);
 		} else if (stateA==-1 || stateB==-1) {
@@ -4011,10 +3689,8 @@ BasicGates.Xor = function(x,y,rotation, world){
 
 }
 */
-
-
 function Gate(x,y,rotation, world){
-	
+
 	this.world = world;
 	this.undecidedOutput = -1;
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this})
@@ -4030,7 +3706,7 @@ function Gate(x,y,rotation, world){
 	this.imgObjGate= new Image();
 	var parent = this;
 	this.imageLoadedGate = false;
-	
+
 	this.imgObjGate.onload = function(){
 		parent.imageLoadedGate = true;
 	}
@@ -4038,7 +3714,7 @@ function Gate(x,y,rotation, world){
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
-	
+
 	this.setLines = function(count){
 	    count = Math.floor(count);
 	    if (count>=1 && count<=this.maxLines) {
@@ -4048,9 +3724,9 @@ function Gate(x,y,rotation, world){
 		this.e.connectors['B'].setLineCount(this.lines);
 		this.e.connectors['out'].setLineCount(this.lines);
 	    }
-	    
+
 	}
-	
+
 	this.render = function(canvii){
 	    this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
@@ -4058,7 +3734,7 @@ function Gate(x,y,rotation, world){
 		    LoadImageToCanvas(canvii['element-bg'].context, this.imgObjGate, this.e.xpos, this.e.ypos, 0,25,25)
 		}
 	    }
-	    
+
 	    //Some code to load the images on the thumbnails on a single render pass.
 	    if (this.world==undefined && this.imageLoadedGate==false) {
 		parent = this;
@@ -4073,11 +3749,11 @@ function Gate(x,y,rotation, world){
 
 	this.tick = function(){
 		this.e.tick();
-		
+
 		for(var line=0; line<this.lines; line++){
 		    var stateA = this.e.connectors['A'].getState(line).get();
 		    var stateB = this.e.connectors['B'].getState(line).get();
-    
+
 		    if (stateA==0 && stateB==0){
 			this.e.connectors['out'].getState(line).set(this.truthTable[0]);
 		    } else if(stateA==1 && stateB==0){
@@ -4165,8 +3841,6 @@ BasicGates.Nor = function(x,y,rotation, world){
 }
 BasicGates.Nor.prototype = new Gate();
 
-
-
 LatchesAndFlipFlops = {};
 LatchesAndFlipFlops['SR-Latch'] = function(x,y,rotation, world){
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
@@ -4176,8 +3850,6 @@ LatchesAndFlipFlops['SR-Latch'] = function(x,y,rotation, world){
 		'Q':new Connector(15, -15, 0, this.e, {connectorType:2,label:'Q'}),
 		'Qn1':new Connector(15, 15, 0, this.e, {connectorType:2,label:'Qn+1'})
 		};
-
-
 	this.Q = new State();
 	this.Q.set(-1)
 	this.hit = function(x,y){
@@ -4196,14 +3868,12 @@ LatchesAndFlipFlops['SR-Latch'] = function(x,y,rotation, world){
 		this.Q.tick();
 		if ( this.e.connectors['set'].state.get()==1 && this.e.connectors['reset'].state.get()==0) {
 			this.Q.set(1)
-
-
 		} else if ( this.e.connectors['set'].state.get()==0 && this.e.connectors['reset'].state.get()==1) {
 			this.Q.set(0)
 
 		} else if (this.e.connectors['set'].state.get()==0 && this.e.connectors['reset'].state.get()==0){
 			//Hold state.
-	    
+
 		} else if (this.e.connectors['set'].state.get()==1 && this.e.connectors['reset'].state.get()==1){
 		    //Invalid state
 		    this.Q.set(-1);
@@ -4221,8 +3891,6 @@ LatchesAndFlipFlops['SR-Latch'] = function(x,y,rotation, world){
 		return(data);
 	}
 }
-
-
 LatchesAndFlipFlops['SR-Flip-Flop'] = function(x,y,rotation, world){
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
 	this.e.connectors = {
@@ -4233,8 +3901,6 @@ LatchesAndFlipFlops['SR-Flip-Flop'] = function(x,y,rotation, world){
 		'Q':new Connector(15, -15, 0, this.e, {connectorType:2,label:'Q'}),
 		'Qn1':new Connector(15, 15, 0, this.e, {connectorType:2,label:'Qn+1'})
 		};
-
-
 	this.Q = new State();
 	this.Q.set(-1)
 	this.hit = function(x,y){
@@ -4256,8 +3922,6 @@ LatchesAndFlipFlops['SR-Flip-Flop'] = function(x,y,rotation, world){
 
 			if ( this.e.connectors['set'].state.get()==1 && this.e.connectors['reset'].state.get()==0) {
 				this.Q.set(1)
-
-
 			} else if ( this.e.connectors['set'].state.get()==0 && this.e.connectors['reset'].state.get()==1) {
 				this.Q.set(0)
 
@@ -4283,8 +3947,6 @@ LatchesAndFlipFlops['SR-Flip-Flop'] = function(x,y,rotation, world){
 		return(data);
 	}
 }
-
-
 LatchesAndFlipFlops['JK-Flip-Flop'] = function(x,y,rotation, world){
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
 	this.e.connectors = {
@@ -4295,8 +3957,6 @@ LatchesAndFlipFlops['JK-Flip-Flop'] = function(x,y,rotation, world){
 		'Q':new Connector(15, -15, 0, this.e, {connectorType:2,label:'Q'}),
 		'Qn1':new Connector(15, 15, 0, this.e, {connectorType:2,label:'Qn+1'})
 		};
-
-
 	this.Q = new State();
 	this.Q.set(-1)
 	this.edgeTrigger = new EdgeTrigger(this.e.connectors['clock'].state, 0);
@@ -4346,25 +4006,40 @@ LatchesAndFlipFlops['JK-Flip-Flop'] = function(x,y,rotation, world){
 	}
 }
 
-
-
 SimpleIcs = {};
 
 SimpleIcs['Register'] = function(x,y,rotation, world){
 
-	this.e = new electronicObject(x,y,rotation,{width:50, height:75, parent:this})
+	this.e = new electronicObject(x,y,rotation,{width:75, height:125, parent:this})
 	this.bits = 8;
+
+    this.set_lamps = function(){
+        this.lamps = []
+        this.color = {r:250, g:195, b:3, a:1}
+        for(var i=0; i<this.bits; i++){
+                if(this.bits==1){
+                    this.lamps.push( new IndicatorLamp(this,0, -0.5*this.e.height + 15 + (this.e.height - 30)*0.5,12,this.color) );
+                } else if (this.bits<=8) {
+                    this.lamps.push( new IndicatorLamp(this,-3, -0.5*this.e.height + 15 + (this.e.height - 30)*(i/(this.bits-1)),8-(2*(this.bits>4)),this.color) );
+                } else {
+                    this.lamps.push( new IndicatorLamp(this,-8+14*( (i%2) == 0), -0.5*this.e.height + 15 + (this.e.height - 30)*( (i - (i%2))/((this.bits)-1)),6,this.color) );
+                }
+               this.lamps[i].setValue(255);
+        }
+    }
+    this.set_lamps();
 	this.e.connectors = {
-		'dataIn':new Connector(-15, 10, 0, this.e, {connectorType:1,label:'dataIn', lines:this.bits}),
-		'dataOut':new Connector(15, 0, 0, this.e, {connectorType:2,label:'dataOut',lines:this.bits}),
-		'clock':new Connector(-15, -25, 0, this.e, {connectorType:1,label:'Clock'}),
-		'write':new Connector(-15, -10, 0, this.e, {connectorType:1,label:'Write'}),
-    'reset':new Connector(-15, 25, 0, this.e, {connectorType:1,label:'Reset'}),
+		'dataIn':new Connector(-25, 10, 0, this.e, {connectorType:1,label:'dataIn', lines:this.bits}),
+		'dataOut':new Connector(25, 0, 0, this.e, {connectorType:2,label:'dataOut',lines:this.bits}),
+		'clock':new Connector(-25, -25, 0, this.e, {connectorType:1,label:'Clock'}),
+		'write':new Connector(-25, -10, 0, this.e, {connectorType:1,label:'Write'}),
+    'reset':new Connector(-25, 25, 0, this.e, {connectorType:1,label:'Reset'}),
 		};
 
 	this.memory = [];
 	for(var bit=0; bit<this.bits; bit++){
 	    this.memory[bit] = 0; //Register memory is only 1 or 0. No inbetween stuffs here.
+        this.lamps[bit].setValue(0);
 	}
 
 	this.hit = function(x,y){
@@ -4373,6 +4048,11 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
 
 	this.render = function(canvii){
 		this.e.render(canvii);
+
+        for (var i in this.lamps) {
+            this.lamps[i].render(canvii);
+        }
+
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -4390,6 +4070,7 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
     		if(this.e.connectors['reset'].getState().get()==1){
           for(var bit=0; bit<this.bits; bit++){
               this.memory[bit] = 0;
+              this.lamps[bit].setValue(0);
           }
 
         } else if (this.e.connectors['write'].getState().get()==1) {
@@ -4397,8 +4078,10 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
 
     			    if ( this.e.connectors['dataIn'].getState(bit).get()==1) {
     				this.memory[bit] = 1;
+                    this.lamps[bit].setValue(255);
     			    } else {
     				this.memory[bit] = 0;
+                    this.lamps[bit].setValue(0);
     			    }
     			}
     		}
@@ -4412,12 +4095,12 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
 
 	this.e.configure = function(me){
 		var conf = {}
-		conf.bits = {value:me.parent.bits, label:'Bits', desciption:'Bit size of register', range:{start:1, end:32, step:1 },
+		conf.bits = {value:me.parent.bits, label:'Bits', desciption:'Bit size of register', range:{start:1, end:16, step:1 },
 				set:function(me, value){
 					//Increase the size of the bus:
 					me.parent.updateLines(value)
 					me.parent.bits  = value;
-
+                    me.parent.set_lamps();
 					}
 			};
 		return(conf);
@@ -4427,20 +4110,17 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
 	this.save = function(){
 		var data = {};
 		data.type = ['SimpleIcs','Register'];
-    data.bits = this.bits;
+        data.bits = this.bits;
+        this.set_lamps()
 		this.e.save(data);
 		return(data);
 	}
-
-
   	this.load = function(data){
       this.updateLines(data.bits);
       this.bits  = data.bits;
   	}
 
 }
-
-
 
 SimpleIcs['Memory'] = function(x,y,rotation, world){
 
@@ -4459,12 +4139,8 @@ SimpleIcs['Memory'] = function(x,y,rotation, world){
 	    'write':new Connector(-15, -20, 0, this.e, {connectorType:1,label:'Write'}),
       'reset':new Connector(-15, 35, 0, this.e, {connectorType:1,label:'Reset'})
 	    };
-
-
       this.wasReset = true;
     this.data = new Uint8Array(Math.pow(2,this.addressSize));
-
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
@@ -4543,8 +4219,6 @@ SimpleIcs['Memory'] = function(x,y,rotation, world){
     }
 
 }
-
-
 SimpleIcs['de-Multiplexer'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:100, parent:this})
@@ -4567,8 +4241,6 @@ SimpleIcs['de-Multiplexer'] = function(x,y,rotation, world){
 	    'selector':new Connector(0, 10, 0, this.e, {connectorType:1,label:'Selector', lines:this.addressSize}),
 	    'input':new Connector(-15, 0, 0, this.e, {connectorType:1,label:'Input', lines:this.bits})
 	    };
-
-
     this.initBusses = function(){
 	//Calculate the required amount of bits for addressing
 	this.addressSize = Math.max(1, Math.ceil( Math.log(this.inBusses)/Math.log(2) ));
@@ -4593,8 +4265,6 @@ SimpleIcs['de-Multiplexer'] = function(x,y,rotation, world){
 		delete this.e.connectors[ toRemove[index] ];
 
 	}
-
-
     }
     this.initBusses();
 
@@ -4673,14 +4343,12 @@ SimpleIcs['de-Multiplexer'] = function(x,y,rotation, world){
 
 }
 
-
-
 SimpleIcs['SineWaveGenerator'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this})
     this.maxBits = 16;
     this.bits = 4;
-    
+
     this.range = Math.pow(2,this.bits)-1;
     this.setBitSize = function(b){
 	if (this.converter==0) {
@@ -4694,8 +4362,6 @@ SimpleIcs['SineWaveGenerator'] = function(x,y,rotation, world){
 	this.bits = b;
 	this.range = Math.pow(2,this.bits)-1;
     }
-
-    
     this.e.connectors = {
 	'frequency':new Connector(-this.e.width/2+10, 0, 0, this.e, {connectorType:1,label:'1/Frequency', lines:this.bits}),
 	'x':new Connector(-this.e.width/2+10, -15, 0, this.e, {connectorType:1,label:'x', lines:this.bits}),
@@ -4703,23 +4369,19 @@ SimpleIcs['SineWaveGenerator'] = function(x,y,rotation, world){
 	'doutput':new Connector(this.e.width/2-10, 15, 0, this.e, {connectorType:2,label:'Digital Output', lines:this.bits}),
 	'aoutput':new Connector(this.e.width/2-10, -15, 0, this.e, {connectorType:2,label:'Analog Output', lines:1})
     };
-
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
-
-   
     this.render = function(canvii){
 	this.e.render(canvii);
 
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y));};
 
     this.tick = function(){
 	this.e.tick();
-	
+
 	var multiplier = (1/this.range);
 	var s = Math.sin( 2*Math.PI* (1/(this.e.connectors['frequency'].getIntValue()/this.range))*multiplier* this.e.connectors['x'].getIntValue()+this.e.connectors['phase'].getIntValue() );
 	if (!isNaN(s)) {
@@ -4728,8 +4390,6 @@ SimpleIcs['SineWaveGenerator'] = function(x,y,rotation, world){
 	    this.e.connectors['aoutput'].state.set( 0.5+0.5*s)
 	    this.s = s;
 	}
-	
-
     }
     //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
@@ -4752,27 +4412,21 @@ SimpleIcs['SineWaveGenerator'] = function(x,y,rotation, world){
 		me.parent.setBitSize(value);
 	    }
 	};
-	
-	
 	return(conf)
     }
 
 }
-
-
 SimpleIcs['Comparator'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:75, parent:this})
     this.margin = 0.02;
-    
+
     this.e.connectors = {
 	    'Mode':new Connector(-15, 0, 0, this.e, {connectorType:1,label:'Mode', lines:1}),
 	    'A':new Connector(-15, -25, 0, this.e, {connectorType:1,label:'Input A'}),
 	    'B':new Connector(-15, 25, 0, this.e, {connectorType:1,label:'Input B'}),
 	    'Output':new Connector(15, 0, 0, this.e, {connectorType:2,label:'Output'})
 	    };
-
-
 
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
@@ -4793,8 +4447,6 @@ SimpleIcs['Comparator'] = function(x,y,rotation, world){
 	} else if (mode==1) {
 	    this.e.connectors['Output'].state.set( this.e.connectors['A'].state.getFloating() < this.e.connectors['B'].state.getFloating() );
 	}
-	
-
     }
     //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
@@ -4822,8 +4474,6 @@ SimpleIcs['Comparator'] = function(x,y,rotation, world){
     }
 
 }
-
-
 //These functions allow for a global way of dealing with binary representation of frequencies
 function mapFrequencyToRange(freq,range){
     return( 0.125 * range * (Math.log(25000*freq/171641))  )
@@ -4832,10 +4482,8 @@ function mapFrequencyToRange(freq,range){
 function mapRangeToFrequency(intValue, range) {
     return( 6.86564*Math.exp( 8*(intValue/range) ) );
 }
-
-
 function MOSOscillator(parent){
-    
+
     this.parent = parent;
     this.enabled = false;
     this.type = 2;
@@ -4849,28 +4497,24 @@ function MOSOscillator(parent){
     this.fineFrequency = 0;
     this.fineTune = 1000000 / 16777216;
     this.filterEnabled = true;
-    
+
     this.updateFrequency = function(){
 	this.frequencyValue = this.frequency + this.fineFrequency * this.fineTune;
     }
     this.updateFrequency();
-    
-    
     this.getTypeText= function(){
-	
+
 	return( this.parent.oscillatorWaveForms[this.type] )
     }
-    
-    
-    
+
     //Create the sound source:
     this.oscillator = this.parent.context.createOscillator();
     this.gainNode = this.parent.context.createGain();
     this.gainNode.gain.value = 1.0;
-    
+
     this.oscillator.connect(this.gainNode);
     this.gainNode.connect(this.parent.filterNode);
-    
+
     this.turnOnVoice = function(){
 	var now = this.parent.context.currentTime;
 	this.gainNode.gain.cancelScheduledValues(now);
@@ -4884,10 +4528,8 @@ function MOSOscillator(parent){
 	this.gainNode.gain.setValueAtTime(this.gainNode.gain.value, now);
 	this.gainNode.gain.exponentialRampToValueAtTime(this.smallAmplitude, now + (0.006 * Math.pow(2, this.release * 12)));
     }
-    
+
     this.start = function(){
-	
-	
 	if (!this.enabled) {
 	    this.turnOnVoice();
 	    this.oscillator.start(0);
@@ -4908,11 +4550,11 @@ function MOSOscillator(parent){
 	}
 
     }
-    
+
     this.setGain = function(value){
 	this.gainNode.value = value;
     }
-    
+
     this.setFilterState = function(bool){
 	this.filterEnabled = bool;
 	if (bool) {
@@ -4923,7 +4565,7 @@ function MOSOscillator(parent){
 	    this.gainNode.connect(this.parent.gainNode);
 	}
     }
-    
+
     this.setCoarse = function(value){
 	this.frequency = 20 * Math.pow(2, value / 12);
 	this.updateFrequency();
@@ -4933,7 +4575,7 @@ function MOSOscillator(parent){
 	this.updateFrequency();
     }
     this.setWaveForm = function(value){
-	
+
 	//Check if the waveform exists:
 	if(this.parent.oscillatorWaveForms[value]!=undefined){
 	    this.type = value;
@@ -4943,7 +4585,7 @@ function MOSOscillator(parent){
 		this.oscillator.type = this.parent.oscillatorWaveForms[this.type];
 	    }
 	}
-	
+
     }
     this.setPulseWidth = function(value){
 	this.pulseWidth = value / 128;
@@ -4958,47 +4600,41 @@ function MOSOscillator(parent){
 	if (this.type == 4) {
 	    this.setPeriodicWave(myPeriodicWave);
 	}
-	
+
     }
-    
+
     this.setAttack = function(value){
 	this.attack = value;
     }
-    
+
     this.setDecay = function(value){
 	this.decay = value/15;
     }
-    
+
     this.setSustain = function(value){
 	this.sustain = value/15;
 	if (this.sustain == 0) {
 	    this.sustain = this.smallAmplitude;
 	}
     }
-    
+
     this.setRelease = function(value){
 	this.release = value/15;
     }
-    
 
-    
 }
-
-
 AudioObjects = {};
 AudioObjects['Speaker'] = function(x,y,rotation, world){
 
     this.world = world;
     this.e = new electronicObject(x,y,rotation,{width:125, height:175, parent:this})
-    
+
     if (world!=undefined) {
 	world.requestAudio();
 	this.e.connectors = {
 	'input':new Connector(-this.e.width/2+10, 0, 0, this.e, {connectorType:1,connectionType:2,audioTarget:this.world.audioContext.destination,label:'input', lines:1})
 	};
     }
-    
-    
     this.imgObj= new Image();
     this.imgObj.src = "./images/audio/speaker.png";
     var parent = this;
@@ -5006,20 +4642,16 @@ AudioObjects['Speaker'] = function(x,y,rotation, world){
     this.imgObj.onload = function(){
 	    parent.imageLoaded = true;
     }
-    
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
-
-   
     this.render = function(canvii){
 	this.e.render(canvii);
 	if( canvii.updateRequired('element-bg') ){
 	    LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos+this.e.width*0.5 - 8, this.e.ypos+this.e.height*0.5 -9, 0, 100, 157)
 	}
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
@@ -5040,50 +4672,40 @@ AudioObjects['Speaker'] = function(x,y,rotation, world){
 	this.bits = data.bits;
     }
 
-    
-
 }
-
-
-
-
 AudioObjects['Amplifier'] = function(x,y,rotation, world){
 
     this.world = world;
-    
+
     this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this})
-    
+
     if (world!=undefined) {
-	
+
 	world.requestAudio();
 	this.gainNode = world.audioContext.createGain();
-	
+
 	this.e.connectors = {
 	'input':new Connector(-this.e.width/2+10, -10, 0, this.e, {connectorType:1,connectionType:2,audioTarget:this.gainNode,label:'input', lines:1}),
 	'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,connectionType:2,audioSource:this.gainNode,label:'output', lines:1}),
 	'gain':new Connector(-this.e.width/2+10, 10, 0, this.e, {connectorType:1,connectionType:1,label:'gain', lines:1})
 	};
     }
-    
-
 
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
-
-   
     this.render = function(canvii){
 	this.e.render(canvii);
 	//canvii['element-fg'].context.fillText((0.5+0.5*this.s) + ' , ' + this.s, this.e.xpos, this.e.ypos);
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
     this.tick = function(){
 	this.e.tick();
 	this.gainNode.gain.value = Math.min(1,Math.max(0,this.e.connectors['gain'].state.getFloating()));
-	
+
     }
     //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
@@ -5101,20 +4723,16 @@ AudioObjects['Amplifier'] = function(x,y,rotation, world){
 
 }
 
-
-
 function IndicatorLamp(parent, x,y,r,color,value){
-    
+
     this.value = value || 0;
     this.x = x;
     this.y = y;
     this.radius = r;
     this.color = color;
-    
 
-    
     this.render = function(canvii){
-	
+
 	if( canvii.updateRequired('element-bg') ){
 		var cX = parent.e.xpos + this.x;
 		var cY = parent.e.ypos + this.y;
@@ -5131,61 +4749,49 @@ function IndicatorLamp(parent, x,y,r,color,value){
 		canvii['element-bg'].context.fill();
 		canvii['element-bg'].context.stroke();
 		canvii['element-bg'].context.shadowColor = 'transparent';
-		
-		
-		
+
 	    }
-	
-	
 	if( canvii.updateRequired('element-fg') && this.value>20 ){
 		var cX = parent.e.xpos + this.x;
 		var cY = parent.e.ypos + this.y;
-		
+
 		var grad = canvii['element-fg'].context.createRadialGradient(cX, cY, this.radius*0.25, cX, cY, this.radius*2);
 		grad.addColorStop(0,"rgba("+this.color.r+","+this.color.g+","+this.color.b+",0.8)");
 		grad.addColorStop(0.5, "rgba("+this.color.r+","+this.color.g+","+this.color.b+",0.5)");
 		grad.addColorStop(1, "rgba("+this.color.r+","+this.color.g+","+this.color.b+",0.0)");
-	
+
 		canvii['element-fg'].context.beginPath();
 		canvii['element-fg'].context.arc(cX, cY, this.radius*2, 0, 2 * Math.PI, false);
 		canvii['element-fg'].context.fillStyle = grad;
 		canvii['element-fg'].context.fill();
-		
+
 		var v = this.value;
 		canvii['element-fg'].context.fillStyle = "rgb("+v+","+v+","+v+")";
 		canvii['element-fg'].context.beginPath();
 		canvii['element-fg'].context.arc(cX, cY, this.radius*0.5, 0, 2*Math.PI, false);
 		canvii['element-fg'].context.fill();
-		
-		
-	    
-	   
 	}
-    
+
     }
-    
+
     this.setValue = function(value){
-	
+
 	this.value = Math.min(Math.max(0,value),255);
-	
+
     }
 }
-
-
-
-
 
 AudioObjects['Filter'] = function(x,y,rotation, world){
 
     this.world = world;
-    
+
     this.e = new electronicObject(x,y,rotation,{width:150, height:150, parent:this})
     this.bits = 8;
     this.range = Math.pow(2,this.bits)-1;
-    
+
     //Freq: 0=lower, 1=center, 2=upper
     this.filters = [
-	
+
 	{name:'lowpass',freq:0, Q:true,gain:false},
 	{name:'highpass',freq:2, Q:true,gain:false},
 	{name:'bandpass',freq:1, Q:true,gain:false},
@@ -5194,7 +4800,7 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
 	{name:'peaking',freq:1, Q:true,gain:true},
 	{name:'notch',freq:2, Q:true,gain:false},
 	{name:'allpass',freq:1, Q:true,gain:false}
-	 
+
     ]
     this.filterType = 0;
     this.imgObj= new Image();
@@ -5204,28 +4810,22 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
     this.imgObj.onload = function(){
 	    parent.imageLoaded = true;
     }
-    
+
     if (world!=undefined) {
-	
+
 	world.requestAudio();
 	this.filterNode = world.audioContext.createBiquadFilter();
-	
+
 	this.e.connectors = {
 	'input':new Connector(-this.e.width/2+15, -this.e.height*0.5+15, 0, this.e, {connectorType:1,connectionType:2,audioTarget:this.filterNode,label:'Audio input', lines:1}),
 	'filterType':new Connector(-this.e.width/2+15,  -this.e.height*0.5+45, 0, this.e, {connectorType:1,connectionType:1,label:'Filter type', lines:3}),
 	'frequency':new Connector(-this.e.width/2+30, -this.e.height*0.5+70, 0, this.e, {connectorType:1,connectionType:1,label:'Frequency', lines:8}),
 	'QFactor':new Connector(-this.e.width/2+30, -this.e.height*0.5+95, 0, this.e, {connectorType:1,connectionType:1,label:'Q Factor', lines:8}),
 	'gain':new Connector(-this.e.width/2+30, -this.e.height*0.5+120, 0, this.e, {connectorType:1,connectionType:1,label:'gain', lines:4}),
-	
+
 	'output':new Connector(this.e.width/2-15, -this.e.height*0.5+70, 0, this.e, {connectorType:2,connectionType:2,audioSource:this.filterNode,label:'Audio output', lines:1})
-	
-	
-	
-	
 	};
     }
-    
-
 
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
@@ -5237,8 +4837,6 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
     this.lamps['freqLow'] = new IndicatorLamp(this, -this.e.width/2+65, -this.e.height*0.5+70, 5, {r:250, g:10, b:0}  )
     this.lamps['freqCenter'] = new IndicatorLamp(this, -this.e.width/2+80, -this.e.height*0.5+70, 5, {r:250, g:10, b:0}  )
     this.lamps['freqHigh'] = new IndicatorLamp(this, -this.e.width/2+95, -this.e.height*0.5+70, 5, {r:250, g:10, b:0}  )
-    
-    
     this.render = function(canvii){
 	this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
@@ -5249,18 +4847,16 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
 	for(var i in this.lamps){
 	    this.lamps[i].render(canvii);
 	}
-	
+
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
     this.tick = function(){
 	this.e.tick();
-	
-	
 	if(this.filterType != this.e.connectors['filterType'].getIntValue() ){
-	    
+
 	    if( this.filters[ this.filterType] != undefined ){
 		this.filterType = this.e.connectors['filterType'].getIntValue();
 		if( this.filters[ this.filterType ].freq==0){
@@ -5271,7 +4867,7 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
 		    this.lamps['freqLow'].setValue(0); this.lamps['freqCenter'].setValue(0); this.lamps['freqHigh'].setValue(255);
 		}
 	    }
-	    
+
 	    if (this.filters[ this.filterType ].Q) {
 		this.lamps['QActive'].setValue(255);
 	    } else {
@@ -5282,11 +4878,11 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
 	    } else {
 		this.lamps['gainActive'].setValue(0);
 	    }
-	    
+
 	    this.filterNode.type = this.filters[ this.filterType].name;
-	    
+
 	}
-	
+
 	this.filterNode.frequency.value = mapRangeToFrequency( this.e.connectors.frequency.getIntValue(), this.range);
 	this.filterNode.gain.value = this.e.connectors.gain.getIntValue();
     }
@@ -5306,34 +4902,30 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
 
 }
 
-
-
 AudioObjects['FourierTransform'] = function(x,y,rotation, world){
 
     this.world = world;
-    
+
     this.e = new electronicObject(x,y,rotation,{width:75, height:100, parent:this})
     this.bits = 8;
     this.range = Math.pow(2,this.bits)-1;
     this.fftResult = new Uint8Array(256);
-    
+
     this.filterType = 0;
-    
+
     if (world!=undefined) {
-	
+
 	world.requestAudio();
 	this.measuringNode = world.audioContext.createAnalyser();
 	this.measuringNode.fftSize = 512;
-	
+
 	this.e.connectors = {
 	'input':new Connector(-this.e.width/2+15, -25, 0, this.e, {connectorType:1,connectionType:2,audioTarget:this.measuringNode,label:'Audio input', lines:1}),
 	'takeSample':new Connector(-this.e.width/2+15,  0, 0, this.e, {connectorType:1,connectionType:1,label:'sample', lines:1}),
 	'frequencyBinSelect':new Connector(-this.e.width/2+15, 25, 0, this.e, {connectorType:1,connectionType:1,label:'Frequency bin to select (1 - 256)', lines:8})
-	
-
 	};
     }
-    
+
     this.e.connectors.output =new Connector(this.e.width/2-15, 0, 0, this.e, {connectorType:2,connectionType:1,label:'Output', lines:8})
 
     this.hit = function(x,y){
@@ -5345,43 +4937,37 @@ AudioObjects['FourierTransform'] = function(x,y,rotation, world){
     for(var i = 0; i<this.lampCount; i++){
 	this.lamps[i] = new IndicatorLamp(this,0, 0.5*this.e.height - i*15 -12, 5, {r:Math.round((i/this.lampCount)*255), g:Math.round(255-(i/this.lampCount)*255), b:0}  )
     }
-    
-    
     this.render = function(canvii){
 	this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
 		canvii['element-bg'].context.fillText(this.e.xpos, this.e.ypos,'Fourier Transform')
 	}
-	
+
 	var a = (this.e.connectors['output'].getIntValue()/this.range)*this.lampCount
 	for(var i in this.lamps){
 	    this.lamps[i].render(canvii);
-	    
+
 	   if (a>i) {
 	    this.lamps[i].setValue(255)
 	   } else {
 	    this.lamps[i].setValue(0)
 	   }
-	    
+
 	}
-	
-	
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
     this.sampled = false; //Whether a sample has been taken already.
     this.tick = function(){
 	this.e.tick();
-	
+
 	if (this.e.connectors['takeSample'].state.get() == 1){
 	    if(this.sampled == false) {
-		
+
 		this.sampled = true;
 		this.measuringNode.getByteFrequencyData(this.fftResult);
-		
-		
 	    }
 	} else {
 	    if (this.e.connectors['takeSample'].state.get() == 0){
@@ -5389,7 +4975,7 @@ AudioObjects['FourierTransform'] = function(x,y,rotation, world){
 	    }
 	}
 	this.e.connectors['output'].setIntValue(this.fftResult[this.e.connectors['frequencyBinSelect'].getIntValue()]);
-	
+
     }
     //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
@@ -5406,17 +4992,14 @@ AudioObjects['FourierTransform'] = function(x,y,rotation, world){
     }
 
 }
-
-
-
 AudioObjects['Oscillator'] = function(x,y,rotation, world){
 
     this.world = world;
     if (world) {
 	if (world.audioContext == undefined) {
-	    world.audioContext = new AudioContext();    
+	    world.audioContext = new AudioContext();
 	}
-	
+
 	this.ctx = world.audioContext;
 
 	//this.ctx = new AudioContext();
@@ -5429,18 +5012,16 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
     this.imgObj.onload = function(){
 	    parent.imageLoaded = true;
     }
-			
-			
     this.color = {r:250, g:195, b:3, a:1}
     this.e = new electronicObject(x,y,rotation,{width:75, height:100, parent:this})
     this.on = false;
     this.oscillatorCount = 1;
-    
+
     //This should be parented;
-    
+
     this.oscillatorWaveForms = ["sine", "square", "sawtooth", "triangle"];
     this.waveForm = 0;
-   
+
     this.pulseLength = 4096;
     var pulseA = new Float32Array(this.pulseLength);
     var pulseB = new Float32Array(this.pulseLength);
@@ -5449,31 +5030,27 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
        pulseA[i] = (Math.sin(2 * Math.PI * i * pulseWidth) / (i * Math.PI));
        pulseB[i] = ((1 - Math.cos(2 * Math.PI * i * pulseWidth)) / (i * Math.PI));
    }
-   
-   //Node-net structure:
 
-   
+   //Node-net structure:
    this.oscillators = {};
    this.initialiseOscillators = function(){
 	this.gainNode = this.ctx.createGain();
 	for (var i=0; i<this.oscillatorCount; i++) {
-	    
+
 	    this.oscillators[i] = this.ctx.createOscillator();
 	    this.oscillators[i].frequency.value = 400;
 	    this.oscillators[i].connect(this.gainNode);
-	   
+
 	    //this.gainNode.connect(this.world.audioContext.destination);
 	     this.oscillators[i].start(0);
 	}
    }
-   
+
    if (world!=undefined) {
     //this.periodicWave = this.world.audioContext.createPeriodicWave(pulseA, pulseB);
     this.initialiseOscillators();
    }
-   
-   
-    
+
     this.maxBits = 16;
     this.bits = 8;
     this.range = Math.pow(2,this.bits)-1;
@@ -5490,8 +5067,6 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
 	this.bits = b;
 	this.range = Math.pow(2,this.bits)-1;
     }*/
-
-    
     if (this.world!=undefined) {
 	this.e.connectors = {
 	    'on':new Connector(-this.e.width/2+10, 0, 0, this.e, {connectorType:1,label:'enable', lines:1}),
@@ -5500,19 +5075,15 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
 	    'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,connectionType:2,audioSource:this.gainNode,label:'output', lines:1})
 	};
     }
-
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
-    
-    
     this.lamps = []
     for (var i in this.oscillatorWaveForms) {
 	this.lamps.push( new IndicatorLamp(this,8, -0.5*this.e.height + 15 + (this.e.height - 30)*(i/(this.oscillatorWaveForms.length-1)),8,this.color) );
     }
     this.lamps[0].setValue(255);
-    
+
     this.render = function(canvii){
 	this.e.render(canvii);
 	if( canvii.updateRequired('element-bg') ){
@@ -5520,20 +5091,18 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
 		 LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos-3, this.e.ypos+this.e.height*0.5-10, 0, 16, 83)
 	    }
 	}
-	    
+
 	for (var i in this.lamps) {
 	    this.lamps[i].render(canvii);
 	}
-    
-	
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
     this.tick = function(){
 	this.e.tick();
-	
+
 	if (this.on==false && this.e.connectors['on'].state.get()==1) {
 	    this.gainNode.gain.value = 1.0;
 	    this.on = true;
@@ -5541,11 +5110,9 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
 	    this.gainNode.gain.value = 0.0;
 	    this.on = false;
 	}
-	
+
 	this.oscillators[0].frequency.value = mapRangeToFrequency(this.e.connectors.frequency.getIntValue(), this.range);
 	//this.gainNode.gain.value = Math.min(1,Math.max(0,this.e.connectors['gain'].state.getFloating()));
-	
-	
 	if (this.e.connectors['waveForm'].getIntValue()!=this.waveForm) {
 	    this.waveForm = this.e.connectors['waveForm'].getIntValue();
 	    for (var i in this.lamps) {
@@ -5555,12 +5122,12 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
 		    this.lamps[i].setValue(0)
 		}
 	    }
-		
+
 	    for (var i in this.oscillators) {
 		this.oscillators[i].type =  this.oscillatorWaveForms[this.waveForm];
-		
+
 	    }
-	    
+
 	}
 
     }
@@ -5585,22 +5152,16 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
 		me.parent.setBitSize(value);
 	    }
 	};
-	
-	
 	return(conf)
     }
 
 }
-
-
-
-
 SimpleIcs['ADC'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this})
     this.maxBits = 16;
     this.bits = 4;
-    
+
     this.range = Math.pow(2,this.bits)-1;
     this.setBitSize = function(b){
 	if (this.converter==0) {
@@ -5611,31 +5172,23 @@ SimpleIcs['ADC'] = function(x,y,rotation, world){
 	this.bits = b;
 	this.range = Math.pow(2,this.bits)-1;
     }
-
-    
     this.e.connectors = {
 	'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,label:'Digital out', lines:this.bits}),
 	'input':new Connector(-this.e.width/2+10, 0, 0, this.e, {connectorType:1,label:'Analog input', lines:1})
     };
-
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
-
-   
     this.render = function(canvii){
 	this.e.render(canvii);
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
     this.tick = function(){
 	this.e.tick();
 	this.e.connectors['output'].setIntValue( (this.e.connectors['input'].state.getFloating())*this.range);
-
-	
 
     }
     //@TODO ADD LOAD AND SAVE FUNCTIONS
@@ -5659,14 +5212,10 @@ SimpleIcs['ADC'] = function(x,y,rotation, world){
 		me.parent.setBitSize(value);
 	    }
 	};
-	
-	
 	return(conf)
     }
 
 }
-
-
 SimpleIcs['DAC'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:150, height:150, parent:this})
@@ -5686,13 +5235,11 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
     this.analogValue = 0; //This is only used in converter mode 0
     this.previousValues = {};
     this.mode = 1; //0 = digital, 1 = mechanical
-    
+
     this.e.connectors = {
 	'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,label:'Analog out', lines:1}),
 	'input':new Connector(-this.e.width/2+10, 0, 0, this.e, {connectorType:1,label:'Digital input', lines:this.bits})
     };
-
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
@@ -5704,15 +5251,11 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 	env.moveTo(whiffleX+whifleLength, whiffleYstart+2)
 	env.lineTo(whiffleX+whifleLength, whiffleYstart+12)
 	env.stroke();
-
-
 	env.shadowColor ='transparent'
 	env.lineWidth = 1;
 	var g = Math.round(bValue*200);
 	var c = Math.round(bValue*20);
 	env.strokeStyle="rgb("+c+","+g+","+c+")";
-
-
 	env.beginPath();
 	for (var i=4; i<9; i+=2) {
 	    env.moveTo(whiffleX+whifleLength-4, whiffleYstart+i)
@@ -5736,8 +5279,6 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 	var g = Math.round(value*200);
 	var c = Math.round(value*20);
 	env.strokeStyle="rgb("+c+","+g+","+c+")";
-
-
 	env.beginPath();
 	for (var i=4; i<9; i+=2) {
 	    env.moveTo(x-4, y+i)
@@ -5757,21 +5298,17 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 	} else  if (d<-0.3) {
 	    lowLag.play('switch_small');
 	}
-
-
 	this.previousValues[index] = value
     }
     this.render = function(canvii){
 	this.e.render(canvii);
 
-	
-	
 	if (this.mode==0) {
 	    this.analogValue = this.e.connectors['input'].getIntValue()/(Math.pow(2,this.bits)-1);
 	} else {
 	    //All the visualisation is perfomed on element-fg
 	    var env = canvii['element-fg'].context;
-	    
+
 	    //Whiffletree visualisation :D.
 	    var whifleLength = 30;
 	    var whiffleHeight = 10;
@@ -5780,7 +5317,7 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 	    var whiffleBarPct = 0.66;
 	    var pistonSize = 5;
 	    //We have to work from the bottom to the top; every whiffle is dependent on the other
-    
+
 	    var inputIndex = 0;
 	    var bitIndex = 0;
 	    var dy = 15;
@@ -5789,17 +5326,17 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 			env.shadowBlur = 3;
 			env.shadowOffsetX = 1;
 			env.shadowOffsetY = 1;
-    
+
 	    for (var whiffle=0; whiffle<whiffles; whiffle++) {
-    
+
 		var whiffleYstart = this.e.ypos - whiffle*whiffleHeight + 50;
 		var whiffleX = whifflesStartX+0.5*whifleLength+whiffle*whiffleBarPct*whifleLength ;
-    
+
 		if (whiffle==0) {
 		    var bValue = this.e.connectors['input'].getState(bitIndex).getFloating();
 		    var whiffleAY = whiffleYstart - bValue*pistonSize
 		    this.pistonSound(bitIndex,bValue)
-    
+
 		    bitIndex++;
 		    //Draw the piston:
 		    env.strokeStyle="#AAA";
@@ -5807,31 +5344,27 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 		    env.moveTo(whiffleX,whiffleAY)
 		    env.lineTo(whiffleX,whiffleYstart+2)
 		    env.stroke();
-    
+
 		    //Draw the coil:
 		    this.drawCoil(whiffleX, whiffleYstart,bValue, env);
-    
+
 		} else {
 		    var whiffleAY = whiffleYstart+prevDy;
-    
+
 		    //Draw the piston:
 		    env.strokeStyle="#AAA";
 		    env.beginPath();
 		    env.moveTo(prevX,prevY-3)
 		    env.lineTo(whiffleX,whiffleAY)
 		    env.stroke();
-    
-    
 		}
 		inputIndex++;
-    
+
 	       // if (whiffle==0) {
 	       var bValue = this.e.connectors['input'].getState(bitIndex).getFloating()
 		var whiffleBY = whiffleYstart - bValue*pistonSize;
 		this.pistonSound(bitIndex,bValue)
 		bitIndex++;
-    
-    
 		//Calculate whiffle output height:
 		var phi = Math.atan2( whifleLength, whiffleBY-whiffleAY);
 		env.strokeStyle="#AAA";
@@ -5850,35 +5383,29 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 		env.moveTo(whiffleX+whifleLength,whiffleYstart+2)
 		env.lineTo(whiffleX+whifleLength,whiffleBY)
 		env.stroke();
-    
+
 		env.lineWidth = 3;
 		env.strokeStyle="#B26814";
 		env.beginPath();
 		env.moveTo(whiffleX,whiffleAY)
 		env.lineTo(whiffleX+whifleLength, whiffleBY)
 		env.stroke();
-    
-    
 	       //Draw coil:
 		this.drawCoil(whiffleX+whifleLength, whiffleYstart,bValue, env);
-    
+
 	    }
-    
+
 	    //Draw final piston:
 	    env.strokeStyle="#AAA";
 	    env.beginPath();
 	    env.moveTo(whiffleX,whiffleAY)
 	    env.lineTo(whiffleX,whiffleYstart+2)
 	    env.stroke();
-    
-    
 	    //Calculate the analog value:
 	    this.analogValue = -prevDy/pistonSize;
 	    env.lineWidth = 1;
 	    env.shadowColor ='transparent'
 	}
-	
-	
     }
     //0: digital, 1; whiffle
     this.setMode = function(mode){
@@ -5891,16 +5418,16 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 		this.e.width = 150;
 		this.e.height = 150;
 	    }
-	    
+
 	    this.e.connectors.input.x = -this.e.width/2+10;
 	    this.e.connectors.output.x = this.e.width/2-10;
 	    this.e.recalcBoundingCoordinates();
-	    
+
 	} else {
 
 	}
     }
-    
+
     this.hover = function(x,y){return(this.e.hover(x,y))
     }
 
@@ -5936,21 +5463,17 @@ SimpleIcs['DAC'] = function(x,y,rotation, world){
 		me.parent.setBitSize(value);
 	    }
 	};
-	
+
 	conf.mode = {value:me.parent.mode, label:'Mode (0: digital, 1:mechanical)', desciption:'Mode of operation', range:{start:0, end:1, step:1 },
 	    set:function(me, value){
 		me.parent.setMode(value);
 	    }
 	};
-	
+
 	return(conf)
     }
 
 }
-
-
-
-
 SimpleIcs['Multiplexer'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:100, parent:this})
@@ -5959,8 +5482,6 @@ SimpleIcs['Multiplexer'] = function(x,y,rotation, world){
     this.maxBits = 16;
     this.bits = 8;
     this.addressSize = 2;
-
-
     this.setBitSize = function(value){
 	this.bits = value;
 	for(var bus=0; bus<this.inBusses; bus++){
@@ -5973,8 +5494,6 @@ SimpleIcs['Multiplexer'] = function(x,y,rotation, world){
 	    'selector':new Connector(0, 10, 0, this.e, {connectorType:1,label:'Selector', lines:this.addressSize}),
 	    'output':new Connector(15, 0, 0, this.e, {connectorType:2,label:'Output', lines:this.bits})
 	    };
-
-
     this.initBusses = function(){
 	//Calculate the required amount of bits for addressing
 	this.addressSize = Math.max(1, Math.ceil( Math.log(this.inBusses)/Math.log(2) ));
@@ -5999,8 +5518,6 @@ SimpleIcs['Multiplexer'] = function(x,y,rotation, world){
 		delete this.e.connectors[ toRemove[index] ];
 
 	}
-
-
     }
     this.initBusses();
 
@@ -6037,8 +5554,6 @@ SimpleIcs['Multiplexer'] = function(x,y,rotation, world){
 	return(data);
 
     }
-
-
     this.load = function(data){
 	this.inBusses = data.inBusses;
 	this.addressSize = data.addressSize;
@@ -6064,8 +5579,6 @@ SimpleIcs['Multiplexer'] = function(x,y,rotation, world){
     }
 
 }
-
-
 
 SimpleIcs['BUS-encoder'] = function(x,y,rotation, world){
     this.e = new electronicObject(x,y,rotation,{width:50, height:100, parent:this});
@@ -6123,11 +5636,7 @@ SimpleIcs['BUS-encoder'] = function(x,y,rotation, world){
     this.e.connectors['output'].getState(bit).set(this.e.connectors['bit_'+bit].getState(0).getFloating());
 
 	}
-
-
     }
-
-
 	    //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
 	var data = {};
@@ -6153,8 +5662,6 @@ SimpleIcs['BUS-encoder'] = function(x,y,rotation, world){
 	return(conf);
     }
 }
-
-
 SimpleIcs['BUS-decoder'] = function(x,y,rotation, world){
     this.e = new electronicObject(x,y,rotation,{width:50, height:100, parent:this});
     this.bits = 8;
@@ -6210,11 +5717,7 @@ SimpleIcs['BUS-decoder'] = function(x,y,rotation, world){
 	    this.e.connectors['bit_'+bit].getState(0).set(this.e.connectors['input'].getState(bit).getFloating())
 
 	}
-
-
     }
-
-
 	    //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
 	var data = {};
@@ -6240,8 +5743,6 @@ SimpleIcs['BUS-decoder'] = function(x,y,rotation, world){
 	return(conf);
     }
 }
-
-
 SimpleIcs['ALU'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:100})
@@ -6259,8 +5760,6 @@ SimpleIcs['ALU'] = function(x,y,rotation, world){
 	//'overflow':new Connector(15, 40, 0, this.e, {connectorType:2,label:'Overflow'})
 
 	};
-
-
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
@@ -6277,8 +5776,6 @@ SimpleIcs['ALU'] = function(x,y,rotation, world){
 
 	//Only do stuff when the clock is high
 	if (this.e.connectors['clock'].getState().get()==1) {
-
-
 	    //Calculate the value for A and B
 	    var A = this.e.connectors['dataA'].getIntValue()
 	    var B = this.e.connectors['dataB'].getIntValue()
@@ -6287,8 +5784,6 @@ SimpleIcs['ALU'] = function(x,y,rotation, world){
 	    if (this.e.connectors['cin'].getState(0).get()==1) {
 		cin = 1
 	    }
-
-
 	    switch (this.e.connectors['operation'].getIntValue()) {
 		case 0:
 		    var result = A+B+cin;
@@ -6342,13 +5837,9 @@ SimpleIcs['ALU'] = function(x,y,rotation, world){
 	    } else {
 		this.e.connectors['zero'].getState(0).set( 0 );
 	    }
-
-
 	}
 
     }
-
-
     //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
 	var data = {};
@@ -6357,11 +5848,7 @@ SimpleIcs['ALU'] = function(x,y,rotation, world){
 	return(data);
 
     }
-
-
 }
-
-
 
 SimpleIcs['BIN-to-7S'] = function(x,y,rotation, world){
 
@@ -6370,8 +5857,6 @@ SimpleIcs['BIN-to-7S'] = function(x,y,rotation, world){
 		'BinaryIn':new Connector(-15, 5, 0, this.e, {connectorType:1,lines:4,label:'Binary in'}),
 		'7S':new Connector(0, -5, 0, this.e, {connectorType:2,lines:7,label:'7-Segment'})
 		};
-
-
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
@@ -6441,12 +5926,10 @@ SimpleIcs['BIN-to-7S'] = function(x,y,rotation, world){
 		val = this.e.connectors['BinaryIn'].getIntValue();
 		this.e.connectors['7S'].setIntValue(this.binTo7D(val));
 
-
-
 	}
-	
+
 	this.load = function(){
-	    
+
 	}
 
 	this.save = function(){
@@ -6457,8 +5940,6 @@ SimpleIcs['BIN-to-7S'] = function(x,y,rotation, world){
 
 	}
 }
-
-
 Inputs = {};
 Inputs.Negative = function(x,y,rotation, world){
 
@@ -6475,8 +5956,6 @@ Inputs.Negative = function(x,y,rotation, world){
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
-	
-	
 	this.tick = function(){
 	    this.e.tick();
 	    this.e.connectors['out'].state.set(0);
@@ -6505,8 +5984,6 @@ Inputs.Positive = function(x,y,rotation, world){
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
-	
-	
 	this.tick = function(){
 	    this.e.tick();
 	    this.e.connectors['out'].state.set(1);
@@ -6519,10 +5996,6 @@ Inputs.Positive = function(x,y,rotation, world){
 		return(data);
 	}
 }
-
-
-
-
 Inputs.Push = function(x,y,rotation, world){
 
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
@@ -6585,32 +6058,26 @@ Inputs.Push = function(x,y,rotation, world){
 	}
 
 	this.hover = function(x,y){
-	    
-	    
 	    if (this.e.hover(x,y)) {
-		
-		
 		var xstart = this.e.xpos-this.e.switchWidth*0.5+this.switchXoffset;
 		var xend = xstart + this.e.switchWidth;
 		var ystart =  this.e.ypos-this.e.switchHeight*0.5 - this.switchYoffset;
 		var yend =  this.e.ypos-this.e.switchHeight*0.5+this.e.switchHeight - this.switchYoffset;
-		
+
 		if (x>=xstart && x<=xend && y>=ystart && y<=yend) {
 		    return('url(./cursors/push_cursor.cur), auto' )
 		} else {
 		    return(this.e.hover(x,y))
 		}
-		
-		 
 	    }
 	   return(false)
-	    
+
 	    //return(this.e.hover(x,y))
 	}
 
 	this.tick = function(t){
 		this.e.tick();
-	    
+
 	    if (t==0) {
 
 		if (this.e.switchPosition>0) {
@@ -6624,8 +6091,6 @@ Inputs.Push = function(x,y,rotation, world){
 			this.e.connectors['out'].state.set(0);
 		}
 	    }
-
-
 
 	}
 
@@ -6696,8 +6161,6 @@ Inputs.Toggle = function(x,y,rotation, world){
 		    }
 		    env.fillStyle = linearGradient;
 		    env.fillRect(xstart, ystart, this.e.switchWidth, this.e.switchHeight);
-
-
 		    if (this.e.hovering) {
 			    env.fillStyle = '#FFF';
 		    } else {
@@ -6714,27 +6177,23 @@ Inputs.Toggle = function(x,y,rotation, world){
 	}
 
 	this.hover = function(x,y){
-	    
+
 	    if (this.e.hover(x,y)) {
-		
+
 		var xstart = this.e.xpos-this.e.switchWidth*0.5+this.switchXoffset;
 		var xend = xstart + this.e.switchWidth;
 		var ystart =  this.e.ypos-this.e.switchHeight*0.5;
 		var yend =  this.e.ypos-this.e.switchHeight*0.5+this.e.switchHeight;
-	    
-
 		if (x>=xstart && x<=xend && y>=ystart && y<=yend) {
 		    if (this.e.switchPosition) {
 			return('url(./cursors/push_cursor.cur), auto' )
 		    } else {
 			return('url(./cursors/push_up_cursor.cur), auto' )
 		    }
-		    
+
 		} else {
 		    return(this.e.hover(x,y))
 		}
-		
-		 
 	    }
 	   return(false)
 	}
@@ -6752,8 +6211,6 @@ Inputs.Toggle = function(x,y,rotation, world){
 		} else {
 			this.e.connectors['out'].state.set(0);
 		}*/
-
-
 	}
 
 	this.updateState = function(){
@@ -6767,7 +6224,7 @@ Inputs.Toggle = function(x,y,rotation, world){
 		this.e.connectors['outB'].state.setInv(this.e.switchPosition);
 		this.switched = true;
 	}
-	
+
 	this.e.click = function(x,y){
 		lowLag.play('switch_medium');
 		this.parent.updateState();
@@ -6789,15 +6246,13 @@ Inputs.Toggle = function(x,y,rotation, world){
 			    this.e.switchPosition  = data.switchPosition;
 			    this.updateState();
 			}
-			
+
 		}
 
 	}
-	
+
 	this.updateState();
 }
-
-
 
 Inputs.DipSwitch = function(x,y,rotation, world){
 
@@ -6824,8 +6279,6 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 
 		this.e.switchPositions = {};
 		for(var bitIndex=0; bitIndex<this.bits; bitIndex+=1){
-
-
 			//copy these formulations also to the render function on change
 			var xstart = this.e.xpos-this.e.width*0.5+bitIndex*(this.e.switchWidth+this.e.switchMargin)  +this.e.switchWidth*0.5+this.switchXoffset;
 			var xend = xstart + this.e.switchWidth;
@@ -6873,22 +6326,16 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 			    env.fillStyle = '#FFF';
 			    env.font="8pt Arial";
 			    env.textAlign = 'center';
-			    
-			   
 			    if (this.reverse==0) {
 				env.fillText( (parseInt(bitIndex)+this.countOffset) ,xstart+0.5*this.e.switchWidth, yend+10);
 			    } else {
 				env.fillText( this.bits-(parseInt(bitIndex)+this.countOffset) ,xstart+0.5*this.e.switchWidth, yend+10);
 			    }
-			    
-
 			    if(bitIndex==0){
 
 				    env.fillText( "ON" , xstart+this.e.switchWidth*0.25 , ystart-5);
 
 			    }
-
-
 			    env.beginPath();
 			    if (this.e.switchPositions[bitIndex].value) {
 				    var linearGradient = env.createLinearGradient(xend, ystart, xend, yend);
@@ -6905,8 +6352,6 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 			    }
 			    env.fillStyle = linearGradient;
 			    env.fillRect(xstart, ystart, this.e.switchWidth, this.e.switchHeight);
-
-
 			    if (this.e.hovering) {
 				    env.fillStyle = '#FFF';
 			    } else {
@@ -6937,7 +6382,7 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 	}
 
 	this.hover = function(x,y){
-	    
+
 	    //@Todo mouse cursor
 	    for(var bitIndex in this.e.switchPositions){
 
@@ -6946,27 +6391,19 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 				return('url(./cursors/push_cursor.cur), auto' )
 			    } else {
 				return('url(./cursors/push_up_cursor.cur), auto' )
-			    } 
+			    }
 		    }
 
 	    }
-
-	    
 	    return(this.e.hover(x,y))
-
-
 	}
 
 	this.drag = function(x,y){
 		this.recalculateHitBoxes();
 
 	}
-
-
 	this.tick = function(){
 		this.e.tick();
-
-
 	}
 
 	this.e.click = function(x,y){
@@ -6983,10 +6420,6 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 
 			this.connectors['out'].getState(bitIndex).set(this.switchPositions[bitIndex].value);
 		}
-
-
-
-
 	}
 
 	this.e.configure = function(me){
@@ -7002,7 +6435,7 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 				    me.parent.countOffset  = value;
 				}
 			};
-		
+
 		conf.reverse = {value:me.parent.reverse, label:'Reverse labels', desciption:'Reverse the labeling order', range:{start:0, end:1, step:1 },
 				set:function(me, value){
 				    me.parent.reverse  = value;
@@ -7010,8 +6443,6 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 			};
 		return(conf);
 	}
-
-
 
 	this.save = function(){
 		var data = {};
@@ -7021,7 +6452,7 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 		data.reverse = this.reverse;
 		data.switchPositionValues = []
 		for (var bit=0; bit<this.bits; bit++) {
-		    data.switchPositionValues[bit] = this.e.switchPositions[bit].value ? 1 : 0;    
+		    data.switchPositionValues[bit] = this.e.switchPositions[bit].value ? 1 : 0;
 		}
 
 		this.e.save(data);
@@ -7036,26 +6467,18 @@ Inputs.DipSwitch = function(x,y,rotation, world){
 	    if (data.countOffset==1) {
 		this.countOffset = 1;
 	    }
-	    
+
 		this.countOffset = data.countOffset;
 		this.bits = data.bits;
 		this.init();
-		
-		
 		if (data.switchPositionValues!=undefined) {
 			for (var i=0; i<data.bits; i++) {
 			    this.e.switchPositions[i].value = data.switchPositionValues[i];
 			    this.e.connectors['out'].getState(i).set(this.e.switchPositions[i].value);
 			}
-			
-			
 		}
-		
-
 	}
 }
-
-
 Inputs['Selector-knob'] = function(x,y,rotation, world){
 
 	this.maxLines= 16;
@@ -7083,12 +6506,10 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 	this.imgObj.onload = function(){
 		parent.imageLoaded = true;
 	}
-
-
     this.init = function(){
 	this.selectedLine = 0;
 	this.angle=0;
-	
+
 	if (this.bcd) {
 	    this.e.connectors['out'].setLineCount(this.lines);
 	} else {
@@ -7097,8 +6518,6 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 
 	this.updateOutput();
     }
-
-
 
 	this.hit = function(x,y){
 
@@ -7146,24 +6565,18 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 	}
 
 	this.hover = function(x,y){
-	    
-	    
 	    if( this.e.hover(x,y) ){
 		if (Math.sqrt(Math.pow(this.e.xpos-x,2)+Math.pow(this.e.ypos-y,2))<15){
 		        return('url(./cursors/rotate_cursor.cur), auto' )
 		} else {
 		    return(this.e.hover(x,y))
 		}
-	    
-	    
 	    }
 	    return(false)
 
 	}
 
 	this.drag = function(x,y){
-
-		
 
 	}
 
@@ -7202,16 +6615,12 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 		}
 		line++;
 	    }
-
-
 	    this.selectedLine+=1;
 	    if (this.selectedLine>=(this.lines)) {
 		this.selectedLine = 0;
 
 	    }
 	    this.updateOutput();
-
-
 
 	}
 
@@ -7240,8 +6649,6 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 		return(conf);
 	}
 
-
-
 	this.save = function(){
 		var data = {};
 		data.type = ['Inputs','Selector-knob'];
@@ -7267,8 +6674,6 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 
 	}
 }
-
-
 
 Inputs.Pulse = function(x,y,rotation, world){
 
@@ -7328,11 +6733,7 @@ Inputs.Pulse = function(x,y,rotation, world){
 			};
 		return(conf);
 	}
-
-
 }
-
-
 Output['LED'] = function(x,y,rotation, world){
 
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this})
@@ -7346,8 +6747,6 @@ Output['LED'] = function(x,y,rotation, world){
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
-
-
 	this.render = function(canvii){
 		this.e.render(canvii);
 
@@ -7368,8 +6767,6 @@ Output['LED'] = function(x,y,rotation, world){
         canvii['element-bg'].context.fill();
         canvii['element-bg'].context.stroke();
         canvii['element-bg'].context.shadowColor = 'transparent';
-
-
     }
 
 		if( canvii.updateRequired('element-fg') ){
@@ -7398,8 +6795,6 @@ Output['LED'] = function(x,y,rotation, world){
       }
 
 		}
-
-
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -7417,8 +6812,6 @@ Output['LED'] = function(x,y,rotation, world){
 	    this.color.g = Math.max(this.greyValue,Math.min(255,Math.round(this.color.g)));
 	    this.color.b = Math.max(this.greyValue,Math.min(255,Math.round(this.color.b)));
 	}
-
-
 	this.save = function(){
 		var data = {};
 		data.type = ['Output','LED'];
@@ -7436,8 +6829,6 @@ Output['LED'] = function(x,y,rotation, world){
 
 	}
 }
-
-
 Output['Segment-display'] = function(x,y,rotation, world){
 
 	this.e = new electronicObject(x,y,rotation,{width:50, height:90})
@@ -7474,8 +6865,6 @@ Output['Segment-display'] = function(x,y,rotation, world){
 	    //Rectangle length:
 	    k = length-2*pointHeight;
 
-
-
 	    if (angle==0) {
 		env.beginPath();
 		env.moveTo(centerX+0.5*width, centerY+0.5*k);
@@ -7497,11 +6886,7 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		env.lineTo(centerX-k*0.5, centerY+0.5*width);
 		//Back to start
 		env.lineTo(centerX+0.5*k, centerY+0.5*width);
-
-
 	    }
-
-
 	    if (state==0) {
 		env.fillStyle = '#AAA';
 		env.strokeStyle = '#000';
@@ -7512,8 +6897,6 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		env.fillStyle = '#FCFEFB';
 		env.fill();
 	    }
-
-
 
 	}
 
@@ -7532,14 +6915,10 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		var l = Math.abs((ystart-yend)/2)-0;
 		var o = 0.5*this.segmentWidth
 
-
-
 		env.beginPath();
 		env.rect(this.e.xpos-0.5*this.e.width, this.e.ypos-0.5*this.e.height, this.e.width, l*2.8 );
 		env.fillStyle = '#333';
 		env.fill();
-
-
 
 		env.strokeStyle = '#000';
     env.lineWidth = 1;
@@ -7565,8 +6944,6 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		if(!this.segments[2]){
 		    this.drawSegment(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0,  0,env );
 		}
-
-
 		if(this.segments[5]){
 		    this.drawGauss(xstart, ystart+0.5*l, l, this.segmentWidth, 0, env );
 		}
@@ -7611,8 +6988,6 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		    this.drawSegment(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0,  1,env );
 		}
 		}
-
-
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -7630,10 +7005,6 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		    var i = Math.round( Math.random()*6 );
 		    this.segments[i] = !this.segments[i];
 		}**/
-
-
-
-
 	}
 
 	this.save = function(){
@@ -7653,8 +7024,6 @@ Output['Segment-display'] = function(x,y,rotation, world){
 
 	}
 }
-
-
 Inputs['Keyboard'] = function(x,y,rotation, world){
 
 	this.keyboardImgLoaded = false;
@@ -7688,12 +7057,8 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 	}
 
 	this.e.connectors['C'] = new Connector(this.ioRXstart+bit*12+15, this.ioY, 0, this.e, {connectorType:2,label:'R'+bit} )
-
-
 	this.render = function(canvii){
 	    this.e.render(canvii);
-
-
 	    if( canvii.updateRequired('element-bg') ){
 		if (this.keyboardImgLoaded) {
 			LoadImageToCanvas(canvii['element-bg'].context, this.keyboardImg, this.e.xpos+50, this.e.ypos+35, 0, 100, 35)
@@ -7707,8 +7072,6 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
-
-
 	this.pressedWasFalse = false;
 	this.tick = function(){
 		this.e.tick();
@@ -7721,14 +7084,14 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 		this.shift = false;
 		if (this.world.isSelected(this.worldId)) {
 		    for (keyIndex in pressedKeys) {
-			
+
 			if (keyIndex in ASCII || keyIndex in KEY_TO_ASCII || keyIndex in SHIFT_KEY_TO_ASCII) {
 			    var q = keyIndex
 			    if (q==16) {
 				this.shift = true;
 			    } else {
 				this.pressed = true;
-				
+
 				if (this.shift && q!=16){
 				    if (q in SHIFT_KEY_TO_ASCII) {
 					q = ASCII.indexOf(SHIFT_KEY_TO_ASCII[q]);
@@ -7741,20 +7104,20 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 				    q = ASCII.indexOf(KEY_TO_ASCII[q]);
 
 				}
-				
+
 				}
-    
+
 				for(var bit=0; bit<7; bit++){
 					this.e.connectors['R'].getState(bit).set(q & (1<<bit));
-    
+
 				}
 				if (this.pressedWasFalse) {
-    
+
 				    if (keyIndex==13) {
 					//13 is carriage return:
 					lowLag.play('key_carriage');
 				    } else {
-    
+
 					lowLag.play('key_' + (Math.round(Math.random()*3)+1))
 				    }
 				}
@@ -7763,7 +7126,7 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 			if (q!=16) {
 			    break;
 			}
-			
+
 		    }
 
     		}
@@ -7774,15 +7137,7 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 		}
 
 	}
-
-
-
-
-
-
 }
-
-
 BasicGates.Random = function(x,y,rotation, world){
 
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this});
@@ -7791,8 +7146,6 @@ BasicGates.Random = function(x,y,rotation, world){
     'out':new Connector(15, 0, 0, this.e, {connectorType:2, lines:this.bits}),
     'clock':new Connector(-15, 0, 0, this.e, {connectorType:1})
   };
-
-
 	this.render = function(canvii){
 		this.e.render(canvii);
 	}
@@ -7820,19 +7173,17 @@ BasicGates.Random = function(x,y,rotation, world){
 		return(data);
 
 	}
-
-
 }
 
 BasicGates.EdgeTrigger = function(x,y,rotation, world){
 
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this});
 	this.e.connectors = {
-	    
+
 	    'in':new Connector(-15, -15, 0, this.e, {connectorType:1, label:"Input signal"}),
 	    'edgeType':new Connector(-15, 15, 0, this.e, {connectorType:1, label:"Edge type"}),
 	    'out':new Connector(15, 0, 0, this.e, {connectorType:2, label:"Output"})
-    
+
 	};
 	this.pulseDuration = 20;
 	this.pulsing = 0;
@@ -7846,7 +7197,7 @@ BasicGates.EdgeTrigger = function(x,y,rotation, world){
 		    canvii['element-fg'].context.lineTo(this.e.xpos,this.e.ypos-arrowHeightHalf);
 		    canvii['element-fg'].context.strokeStyle="#222";
 		    canvii['element-fg'].context.stroke();
-		    
+
 		    var arrowWidthHalf = 5;
 		    var arrowKerning = 5;
 
@@ -7856,8 +7207,6 @@ BasicGates.EdgeTrigger = function(x,y,rotation, world){
 		    canvii['element-fg'].context.lineTo(this.e.xpos+arrowWidthHalf,this.e.ypos+(arrowHeightHalf-arrowKerning)*(this.edgeTrigger.edgeType ? -1 : 1));
 		    canvii['element-fg'].context.strokeStyle="#222";
 		    canvii['element-fg'].context.stroke();
-		    
-		    
 		}
 	}
 
@@ -7874,15 +7223,15 @@ BasicGates.EdgeTrigger = function(x,y,rotation, world){
 		this.pulsing = this.pulseDuration;
 	    }
 	    if (this.pulsing>0) {
-		
+
 		this.e.connectors['out'].state.set(1);
 		this.pulsing--;
 	    } else {
 		this.e.connectors['out'].state.set(0);
 	    }
-	    
+
 	    this.edgeTrigger.setEdgeType( this.e.connectors['edgeType'].state.get() );
-	    
+
 	}
 
 	this.save = function(){
@@ -7892,8 +7241,6 @@ BasicGates.EdgeTrigger = function(x,y,rotation, world){
 		return(data);
 
 	}
-
-
 }
 function mod(m, n) {
         return ((m % n) + n) % n;
@@ -7935,11 +7282,7 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
         this.position += value;
         this.position = Math.max(0, this.position);
 
-
-
     }
-
-
     this.goTo = function(value){
 
         this.position = value;
@@ -7980,8 +7323,6 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
 	canvas.fillRect(x-this.horizontalMargin,y+this.digitHeight, this.digitWidth+2*this.horizontalMargin , 5);
 
     }
-
-
     this.pad = function pad(n, width, z) {
         z = z || '0';
         n = n + '';
@@ -8032,8 +7373,6 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
 
             }
             position+= this.digitWidth+this.digitGap;
-
-
         }
 
         //Draw glare
@@ -8053,8 +7392,6 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
         canvas.fillRect(x,y, this.digitWidth*this.digits+ (this.digits-1)*this.digitGap + this.horizontalMargin*2 , this.digitHeight);
         canvas.closePath();
 
-
-
     }
     this.tick = function(){
 		this.countState.tick();
@@ -8071,8 +7408,6 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
 			this.add(1);
 			changed =  true;
 		}
-
-
 		if (this.e.connectors['time'].state.get()==1) {
 			this.add(1);
 			changed =  true;
@@ -8100,14 +7435,10 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
 				changed =  true;
 			}
 		}
-
-
 		if(changed){
 			//Calculate current value
 			this.e.connectors['r_current'].setIntValue(this.position)
 		}
-
-
     }
     	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
@@ -8132,10 +7463,6 @@ Miscellaneous['Rotary-counter'] = function(x,y,rotation, world){
 	}
 
 }
-
-
-
-
 //To store the tape data in a string :).
 function Uint8ToString(u8a){
   var CHUNK_SZ = 0x8000;
@@ -8159,8 +7486,6 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 	    'Output':new Connector(60, this.e.height/2 - 10, 0, this.e, {connectorType:2, lines:9, label:"Output"}),
 	    'Set':new Connector(-60, this.e.height/2 - 10, 0, this.e, {connectorType:1, lines:9, label:"Set value"}),
 	    };
-
-
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
@@ -8186,8 +7511,6 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 
 	}
 	this.setDecadeCount(this.decades);
-
-
 	this.render = function(canvii){
 		this.e.render(canvii);
 		var dekatronRadius = 62;
@@ -8221,8 +7544,6 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 		    canvii['element-bg'].context.fillStyle =grad
 		    canvii['element-bg'].context.fill();
 		}
-
-
 		//@todo: optimise
 		var env = canvii['element-fg'].context;
 		//Every main cathode has 2 guides, guide 1 and guide 2.This means we require 3*decades cathode pins to show
@@ -8263,20 +7584,12 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 
 		}
 
-
-
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
-
-
-
-
 	this.lstate = 0;
 	this.rstate = 0;
-
-
 	this.updatePosition = function(force){
 
 	    if (force || this.position%3!=0 ){
@@ -8306,16 +7619,10 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 		    }
 		    this.e.connectors['Output'].getState(enable).set(1);
 		}
-
-
 	    }
 	}
-
-
 	this.tick = function(){
 	    this.e.tick();
-
-
 	    if (this.position%3!=0 && Math.random()>0.5) {
 		this.updatePosition(true)
 	    }
@@ -8352,11 +7659,7 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 		    }
 		}
 	    }
-
-
 	}
-
-
 	this.save = function(){
 		var data = {};
 		data.type = ['Miscellaneous','Dekatron'];
@@ -8374,10 +7677,6 @@ Miscellaneous['Dekatron'] = function(x,y,rotation, world){
 
 	}
 }
-
-
-
-
 Miscellaneous['Modem'] = function(x,y,rotation, world){
 
 	this.e = new electronicObject(x,y,rotation,{width:150, height:150,parent:this});
@@ -8402,8 +7701,6 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 	    'busy':new Connector(40, this.e.height/2 - 10, 0, this.e, {connectorType:2, lines:1, label:'busy'}),
 	    'incomingCall':new Connector(20, this.e.height/2 - 10, 0, this.e, {connectorType:2, lines:1, label:'incoming call'})
 	    };
-
-
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
@@ -8433,8 +7730,6 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		    digit = 10 - index;
 		}
 		console.log(index)
-
-
 		this.dialTargetDigit = digit;
 		this.dialInTransit = true;
 		this.dialReturning = false;
@@ -8442,15 +7737,11 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		this.dialTarget = (9-index)*(Math.PI*2*0.83/10) +0.95
 		console.log(this.dialTarget)
 	    }
-
-
 	}
 
 	this.render = function(canvii){
 		this.e.render(canvii);
 		var dialRadius = 62;
-
-
 		var centerX = this.e.xpos;
 		var centerY = this.e.ypos-8;
 
@@ -8473,8 +7764,6 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		    env.fillStyle =grad
 		    env.fill();
 		}
-
-
 		var env = canvii['element-fg'].context;
 		if (this.dialImageLoaded) {
 		    //+ this.spindelA.x this.spindelA.y
@@ -8484,14 +7773,10 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		    env.shadowBlur = 3;
 		    env.shadowOffsetX = 1;
 		    env.shadowOffsetY = 1;
-
-
 		    LoadImageToCanvas(env, this.dialImage, centerX, centerY,  this.dialPosition, 52.5, 52.5)
 			env.shadowColor = "transparent";
 			//this.dialPosition+= 0.01;
 		}
-
-
 	    		//The dial disc has 10 numbers (1 -> 9 -> 0)
 		if (this.showhover && this.hoveringIndex!=-1 && this.dialInTransit==false) {
 
@@ -8503,11 +7788,7 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 			env.arc(x, y, 9, 0, 2 * Math.PI, false);
 			env.strokeStyle = 'rgba(100,50,50,0.6)'
 			env.stroke();
-
-
 		}
-
-
 		if (window.Settings['drawShadows']) {
 		    env.shadowColor = '#000';
 		    env.shadowBlur = 3;
@@ -8567,8 +7848,6 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 	    }
 
 	}
-
-
 	this.passPlayed = false;
 
 	this.execState = 0;
@@ -8585,8 +7864,6 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		     }
 		     if (d<0 || d>9) {
 			//Invalid digit :O.
-
-
 		     } else {
 			this.dialToIndex( d );
 		     }
@@ -8594,8 +7871,6 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 	    } else {
 		this.execState=0;
 	    }
-
-
 	    if (this.dialInTransit) {
 
 		    if (this.dialReturning) {
@@ -8633,11 +7908,7 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		    }
 
 		}
-
-
 	}
-
-
 	this.save = function(){
 		var data = {};
 		data.type = ['Miscellaneous','Modem'];
@@ -8648,14 +7919,8 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 	}
 
 	this.load = function(data){
-
-
 	}
 }
-
-
-
-
 Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 
 	this.backplaneLoaded = false;
@@ -8687,11 +7952,7 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 	this.innerSpindelWidth = 8;
 	this.spindelHeading = 0;
 	this.size = 1024; //Bits length
-
-
 	this.sectorDistance = 0.3; //Distance between two bytes on the tape.
-
-
 	this.position = 0; //Position of the reader
 	this.physicalTapeSize = 38; //Space the tape takes on the spindel (Excluding inner spindel width, next line)
 	this.physicalTapeSize = this.physicalTapeSize - this.innerSpindelWidth;
@@ -8723,7 +7984,7 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 	this.e.connectors['W'] = new Connector(this.ioWXstart, this.ioY, 0, this.e, {connectorType:1,label:'Write', lines:this.tapeBitWidth} )
 	this.e.connectors['R'] = new Connector(this.ioRXstart, this.ioY, 0, this.e, {connectorType:2,label:'Read', lines:this.tapeBitWidth} )
 	this.e.connectors['OnByte'] = new Connector( 0.5*(this.ioWXstart+this.ioRXstart), this.ioY, 0, this.e, {connectorType:2,label:'on byte', lines:1} )
-	
+
 	this.initialiseTapeData = function(){
 
 		this.data = new Uint8Array(this.size);
@@ -8788,8 +8049,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 
 		this.e.render(canvii, true);
 
-
-
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -8798,8 +8057,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
-
-
 	this.getHeadBytePosition = function(){
 
 		//Get the closest value:
@@ -8833,8 +8090,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 				this.e.connectors['R'].getState(bit).set(-1);
 			}
 		}
-		
-
 	}
 
 	this.write = function(){
@@ -8851,8 +8106,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 		}
 
 	}
-
-
 	this.tick = function(v){
 		this.e.tick();
 		if (v%4==0) {
@@ -8936,8 +8189,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 		this.data = new Uint8Array(atob(data.tapeData).split("").map(function(c) {return c.charCodeAt(0); }));
 
 	}
-
-
 	this.e.configure = function(me){
 		//Me is electronic object in this case :). (The base of the tape drive basically), me.parent is the tape drive itself
 		var conf = {}
@@ -8949,8 +8200,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 		conf.defaultSpeed = {value:me.parent.defaultSpeed, label:'Default speed', desciption:'The tapedrive will run at this speed by default (lowest speed), the maximum speed will be 16 times higher', range:{start:0.001, end:0.02, step:0.001},
 
 			};
-
-
 		conf.sectorDistance = {value:me.parent.sectorDistance, label:'Sector size', desciption:'How big a sector/bit is alters the distance between two bytes; this defines the duration of the floating signal between bytes', range:{start:0, end:0.9, step:0.1},
 				set:function(me, value){ me.parent.sectorDistance = value; }
 			};
@@ -8959,10 +8208,6 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 	}
 
 }
-
-
-
-
 MeasurementObjects={};
 
 MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
@@ -8983,11 +8228,9 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 	this.meterFront.onload = function(){
 		parent.meterFrontLoaded = true;
 	}
-
-
 	//Frequency mapping vars:
 	this.bits = 8;
-	
+
 	this.value = 1;
 	this.innerRadius = 35;
 	this.vr = 0; //Angular velocity
@@ -9003,18 +8246,18 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 
 		};
 	this.e.connectors['Input'].state.set(-1);
-	
+
 	this.translate = function(v){
 	     return( (v*this.aRange)+ this.aStart )
 	}
-	
+
 	this.setMode = function(m){
-	    
+
 	    if (m!=this.mode) {
 		if (m==1) {
 		    this.range = Math.pow(2,this.bits)-1;
 		    this.mode = 1;
-		    
+
 		    this.label = 'Hz'
 		    this.sublabel = 'log'
 		    if (this.world!=undefined) {
@@ -9034,10 +8277,6 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 	    }
 	}
 	this.setMode(0);
-		    
-	    
-	    
-	
 	this.render = function(canvii){
 
 		this.e.render(canvii);
@@ -9050,11 +8289,9 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 
 			    LoadImageToCanvas(env, this.meterBack, this.e.xpos, this.e.ypos,  0, 140 + this.imageXoffset, 141 + this.imageYoffset)
 		    }
-		    
-		    
-		    
+
 		    canvii['element-bg'].context.textAlign = 'center';
-		    
+
 		    //Draw values:
 		    //Alpha range:
 		    if (this.mode==0) {
@@ -9069,7 +8306,7 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 			    canvii['element-bg'].context.lineTo(this.e.xpos+Math.sin(alpha)*(7+this.innerRadius),this.e.ypos+Math.cos(alpha)*(7+this.innerRadius))
 			    canvii['element-bg'].context.stroke();
 			    canvii['element-bg'].context.fillText(Math.round(v*100)/10,this.e.xpos+Math.sin(alpha)*(10+this.innerRadius),this.e.ypos+Math.cos(alpha)*(10+this.innerRadius));
-			    
+
 			}
 			canvii['element-bg'].context.lineWidth = 1;
 			canvii['element-bg'].context.strokeStyle = '#999';
@@ -9094,10 +8331,10 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 			    canvii['element-bg'].context.lineTo(this.e.xpos+Math.sin(alpha)*(7+this.innerRadius),this.e.ypos+Math.cos(alpha)*(7+this.innerRadius))
 			    canvii['element-bg'].context.stroke();
 			    canvii['element-bg'].context.fillText(frequencies[freq],this.e.xpos+Math.sin(alpha)*(10+this.innerRadius),this.e.ypos+Math.cos(alpha)*(10+this.innerRadius));
-			
+
 			}
 			//Minor frequencies:
-			
+
 			canvii['element-bg'].context.lineWidth = 1;
 			canvii['element-bg'].context.strokeStyle = '#999';
 			for(var freq=1; freq<=21000; freq*=1.5){
@@ -9111,7 +8348,7 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 			    }
 			}
 		    }
-		    
+
 		    //Draw labeling
 		    canvii['element-bg'].context.font = '600 8pt Century Gothic';
 		    canvii['element-bg'].context.fillStyle = '#333';
@@ -9119,8 +8356,6 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		    canvii['element-bg'].context.font = '5pt Century Gothic';
 		    canvii['element-bg'].context.fillStyle = '#666';
 		    canvii['element-bg'].context.fillText(this.sublabel, this.e.xpos, this.e.ypos-5);
-		    
-				  
 		}
 
 		//@todo; create extra foreground layer and optimise
@@ -9129,7 +8364,7 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		env.shadowBlur = 3;
 		env.shadowOffsetX = 1;
 		env.shadowOffsetY = 2;
-		    
+
 		env.lineWidth=2;
 
 		env.strokeStyle="#666";
@@ -9143,7 +8378,7 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		var fatEndy = this.e.ypos+Math.cos(a)*r;
 		env.lineTo(fatEndX,fatEndy);
 		env.stroke();
-		
+
 		env.strokeStyle="#F66";
 		env.beginPath();
 		env.moveTo(fatEndX,fatEndy);
@@ -9154,8 +8389,6 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		env.stroke();
 		env.lineWidth=1;
 		env.shadowColor = 'transparent';
-		
-		
 		//Debug:
 		/*
 		env.strokeStyle="#F66";
@@ -9163,27 +8396,19 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		env.moveTo(this.e.xpos, this.e.ypos);
 		env.lineTo(this.e.xpos+Math.sin(this.aStart)*this.innerRadius,this.e.ypos+Math.cos(this.aStart)*this.innerRadius)
 		env.stroke()
-		
+
 		env.strokeStyle="#66F";
 		env.beginPath();
 		env.moveTo(this.e.xpos, this.e.ypos);
 		env.lineTo(this.e.xpos+Math.sin(this.aEnd)*this.innerRadius,this.e.ypos+Math.cos(this.aEnd)*this.innerRadius)
 		env.stroke()
 		*/
-
-
 		if (this.meterFrontLoaded) {
 			this.imageXoffset = -70;
 			this.imageYoffset = -65;
 
 			LoadImageToCanvas(env, this.meterFront, this.e.xpos, this.e.ypos,  0, 140 + this.imageXoffset, 141 + this.imageYoffset)
 		}
-
-
-
-
-
-
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -9192,42 +8417,38 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
-
-
 	this.tick = function(tickId){
 		this.e.tick();
-		
+
 		//Make the analog meter not biased by the simulation/render ratio
 		if (tickId==0) {
-		    
+
 		    if (this.mode==0) {
 			var diff = this.value - Math.min(1, Math.max(0.0,this.e.connectors['Input'].state.getFloating()));
 		    } else if (this.mode==1) {
 			var diff = this.value - Math.min(1, Math.max(0.0,this.e.connectors['Input'].getIntValue()/this.range));
 		    }
-		    
+
 		    //console.log(this.e.connectors['Input'].state.getFloating())
-		    
+
 		    if (diff>0) {
 			if (this.vr>0) {
 			    this.vr*=0.7;
-			} 
+			}
 			this.vr-=0.01*diff
 		    } else {
-			
+
 			if (this.vr<0) {
 			    this.vr*=0.7;
 			}
-			
+
 			this.vr+=0.01*-diff
 		    }
-		    
+
 		    var vmax = 0.05
 		    this.vr = Math.max(Math.min(vmax,this.vr), -vmax)
 		    this.value += this.vr;
 		}
-		
-
 
 	}
 
@@ -9238,11 +8459,11 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		this.e.save(data);
 		return(data);
 	}
-	
+
 	this.load = function(c){
 	    this.setMode(c.mode)
 	}
-	
+
 	this.e.configure = function(me){
 		var conf = {}
 		conf.mode = {value:me.parent.mode, label:'Mode(0:volts, 1:freq mapping)', desciption:'-', range:{start:0, end:1, step:1},
