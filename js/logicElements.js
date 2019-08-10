@@ -1034,12 +1034,22 @@ width 	Optional. The width of the image to use (stretch or reduce the image) 	Pl
 height 	Optional. The height of the image to use (stretch or reduce the image)
 */
 function LoadImageToCanvas(env, imageObj, positionX, positionY, angleInRad , axisX, axisY){
-	env.translate( positionX, positionY );
-	env.rotate( angleInRad );
-	env.drawImage( imageObj, -axisX, -axisY );
-	env.rotate( -angleInRad );
-	env.translate( -positionX, -positionY );
 
+    if(imageObj.complete && imageObj.naturalHeight !== 0){
+        env.translate( positionX, positionY );
+        env.rotate( angleInRad );
+        env.drawImage( imageObj, -axisX, -axisY );
+        env.rotate( -angleInRad );
+        env.translate( -positionX, -positionY );
+    } else {
+        imageObj.onload = function () {
+            env.translate( positionX, positionY );
+          	env.rotate( angleInRad );
+          	env.drawImage( imageObj, -axisX, -axisY );
+          	env.rotate( -angleInRad );
+          	env.translate( -positionX, -positionY );
+        }
+    }
 }
 /* Rotating a poly is very usefull :)
  * Uses basic affine rotation
@@ -2239,22 +2249,22 @@ function CRT(pixelsX, pixelsY, parent) {
     }
 
     this.render = function(c){
-	c.beginPath();
-	//@todo real formula for this
-	c.rect(parent.xpos, parent.ypos, parent.pxWidth*parent.pixWidth, parent.pxHeight*parent.pixHeight );
-	var q = 10;
-	c.fillStyle = 'rgb('+q+', '+q+', '+q+')';
-	c.fill();
-	for (var x in this.pixels) {
-	    for(var y in this.pixels[x]){
-		this.pixels[x][y].render(c);
-	    }
+    	c.beginPath();
+    	//@todo real formula for this
+    	c.rect(parent.xpos, parent.ypos, parent.pxWidth*parent.pixWidth, parent.pxHeight*parent.pixHeight );
+    	var q = 10;
+    	c.fillStyle = 'rgb('+q+', '+q+', '+q+')';
+    	c.fill();
+    	for (var x in this.pixels) {
+    	    for(var y in this.pixels[x]){
+    		this.pixels[x][y].render(c);
+    	    }
 
-	}
-	if (odd(y)&&this.oddSwitch) {
+    	}
+    	if (odd(y)&&this.oddSwitch) {
 
-	    //this.pixels[0][this.scanLinePosition].wake();
-	}
+    	    //this.pixels[0][this.scanLinePosition].wake();
+    	}
 
     }
 
@@ -2500,9 +2510,9 @@ Output.Screen = function (x,y,rotation,world) {
 	//Draw the screen:
 	this.imageXoffset = this.offsetX;
 	this.imageYoffset = this.offsetY;
-	if (this.imageFrontLoaded) {
-	    LoadImageToCanvas(canvii['element-fg'].context, this.imageFront, this.e.xpos, this.e.ypos, 0, 161 + this.imageXoffset, 130 + this.imageYoffset)
-	}
+
+	LoadImageToCanvas(canvii['element-fg'].context, this.imageFront, this.e.xpos, this.e.ypos, 0, 161 + this.imageXoffset, 130 + this.imageYoffset)
+
 
 	//Print every character
 	for (var row=0; row<this.rows; row++) {
@@ -3338,9 +3348,9 @@ BasicGates.Not = function(x,y,rotation, world){
 	this.render = function(canvii){
 	    this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
-		if (this.imageLoadedGate) {
-		    LoadImageToCanvas(canvii['element-bg'].context, this.imgObjGate, this.e.xpos, this.e.ypos, 0,25,25)
-		}
+
+		  LoadImageToCanvas(canvii['element-bg'].context, this.imgObjGate, this.e.xpos, this.e.ypos, 0,25,25)
+
 	    }
 	}
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -3705,11 +3715,7 @@ function Gate(x,y,rotation, world){
 	*/
 	this.imgObjGate= new Image();
 	var parent = this;
-	this.imageLoadedGate = false;
 
-	this.imgObjGate.onload = function(){
-		parent.imageLoadedGate = true;
-	}
 
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
@@ -3730,17 +3736,15 @@ function Gate(x,y,rotation, world){
 	this.render = function(canvii){
 	    this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
-		if (this.imageLoadedGate) {
+
 		    LoadImageToCanvas(canvii['element-bg'].context, this.imgObjGate, this.e.xpos, this.e.ypos, 0,25,25)
-		}
+
 	    }
 
 	    //Some code to load the images on the thumbnails on a single render pass.
-	    if (this.world==undefined && this.imageLoadedGate==false) {
-		parent = this;
-		this.imgObjGate.onload = function(){
+	    if (this.world==undefined){
 		    LoadImageToCanvas(canvii['element-bg'].context, parent.imgObjGate, parent.e.xpos, parent.e.ypos, 0,25,25)
-		}
+
 	    }
 	}
 
@@ -4010,19 +4014,21 @@ SimpleIcs = {};
 
 SimpleIcs['Register'] = function(x,y,rotation, world){
 
-	this.e = new electronicObject(x,y,rotation,{width:75, height:125, parent:this})
+	this.e = new electronicObject(x,y,rotation,{width:75, height:150, parent:this})
 	this.bits = 8;
-
+    this.vertical_offset = 40;
+    this.vertical_translate = 5;
     this.set_lamps = function(){
         this.lamps = []
         this.color = {r:250, g:195, b:3, a:1}
         for(var i=0; i<this.bits; i++){
                 if(this.bits==1){
-                    this.lamps.push( new IndicatorLamp(this,0, -0.5*this.e.height + 15 + (this.e.height - 30)*0.5,12,this.color) );
+                    this.lamps.push( new IndicatorLamp(this,0, -0.5*this.e.height + this.vertical_offset*0.5 + (this.e.height - this.vertical_offset)*0.5 + this.vertical_translate,12,this.color) );
                 } else if (this.bits<=8) {
-                    this.lamps.push( new IndicatorLamp(this,-3, -0.5*this.e.height + 15 + (this.e.height - 30)*(i/(this.bits-1)),8-(2*(this.bits>4)),this.color) );
+                    var extra_offset_vert = 8 + 20*(this.bits==2) + 20*(this.bits<=4) ;
+                    this.lamps.push( new IndicatorLamp(this,0, extra_offset_vert*0.5 + this.vertical_translate+ -0.5*this.e.height + 0.5*this.vertical_offset + (this.e.height - this.vertical_offset - extra_offset_vert)*(i/(this.bits-1)),8-(2*(this.bits>4)),this.color) );
                 } else {
-                    this.lamps.push( new IndicatorLamp(this,-8+14*( (i%2) == 0), -0.5*this.e.height + 15 + (this.e.height - 30)*( (i - (i%2))/((this.bits)-1)),6,this.color) );
+                    this.lamps.push( new IndicatorLamp(this,-8+14*( (i%2) == 0), this.vertical_translate -0.5*this.e.height + this.vertical_offset*0.5 + (this.e.height - this.vertical_offset)*( (i - (i%2))/((this.bits)-1)),6,this.color) );
                 }
                this.lamps[i].setValue(255);
         }
@@ -4051,6 +4057,30 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
 
         for (var i in this.lamps) {
             this.lamps[i].render(canvii);
+        }
+
+        if( canvii.updateRequired('element-fg') ){
+		    var env = canvii['element-fg'].context;
+
+            //Label:
+            env.beginPath();
+            env.rect(this.e.xpos-0.4*this.e.width, this.e.ypos-0.5*this.e.height+1, this.e.width*0.8, 15 );
+            env.fillStyle = '#333';
+            env.fill();
+
+
+		    env.font="8pt Arial";
+		    env.textAlign = 'center';
+            env.fillStyle = '#CCC';
+            env.fillText( "Register" , this.e.xpos, this.e.ypos + -0.5*this.e.height+13)
+            env.lineWidth = 0.5;
+            env.strokeStyle = '#777';
+
+
+            env.strokeText( "Register" , this.e.xpos, this.e.ypos + -0.5*this.e.height+13)
+
+            // -0.5*this.e.width, -0.5*this.e.height);
+
         }
 
 	}
@@ -4838,15 +4868,15 @@ AudioObjects['Filter'] = function(x,y,rotation, world){
     this.lamps['freqCenter'] = new IndicatorLamp(this, -this.e.width/2+80, -this.e.height*0.5+70, 5, {r:250, g:10, b:0}  )
     this.lamps['freqHigh'] = new IndicatorLamp(this, -this.e.width/2+95, -this.e.height*0.5+70, 5, {r:250, g:10, b:0}  )
     this.render = function(canvii){
-	this.e.render(canvii);
+	       this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
-	    if (this.imageLoaded==true) {
+
 		 LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos+this.e.width*0.5, this.e.ypos+this.e.height*0.5, 0, 150, 150)
-	    }
-	}
-	for(var i in this.lamps){
-	    this.lamps[i].render(canvii);
-	}
+
+    	}
+    	for(var i in this.lamps){
+    	    this.lamps[i].render(canvii);
+    	}
 
     }
 
@@ -5008,10 +5038,7 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
     this.imgObj= new Image();
     this.imgObj.src = "./images/audio/waveIcons.png";
     var parent = this;
-    this.imageLoaded = false;
-    this.imgObj.onload = function(){
-	    parent.imageLoaded = true;
-    }
+
     this.color = {r:250, g:195, b:3, a:1}
     this.e = new electronicObject(x,y,rotation,{width:75, height:100, parent:this})
     this.on = false;
@@ -5087,9 +5114,9 @@ AudioObjects['Oscillator'] = function(x,y,rotation, world){
     this.render = function(canvii){
 	this.e.render(canvii);
 	if( canvii.updateRequired('element-bg') ){
-	    if (this.imageLoaded==true) {
+
 		 LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos-3, this.e.ypos+this.e.height*0.5-10, 0, 16, 83)
-	    }
+
 	}
 
 	for (var i in this.lamps) {
@@ -6906,88 +6933,88 @@ Output['Segment-display'] = function(x,y,rotation, world){
 		//@todo: only update on change
 		if( canvii.updateRequired('element-fg') ){
 		    env = canvii['element-fg'].context;
-		env.beginPath();
+    		env.beginPath();
 
-		var xstart = this.e.xpos-this.e.switchWidth*0.5+this.switchXoffset;
-		var xend = xstart + this.e.switchWidth;
-		var ystart =  this.e.ypos-this.e.switchHeight*0.5 - this.yOffset;
-		var yend =  this.e.ypos-this.e.switchHeight*0.5+this.e.switchHeight - this.yOffset;
-		var l = Math.abs((ystart-yend)/2)-0;
-		var o = 0.5*this.segmentWidth
+    		var xstart = this.e.xpos-this.e.switchWidth*0.5+this.switchXoffset;
+    		var xend = xstart + this.e.switchWidth;
+    		var ystart =  this.e.ypos-this.e.switchHeight*0.5 - this.yOffset;
+    		var yend =  this.e.ypos-this.e.switchHeight*0.5+this.e.switchHeight - this.yOffset;
+    		var l = Math.abs((ystart-yend)/2)-0;
+    		var o = 0.5*this.segmentWidth
 
-		env.beginPath();
-		env.rect(this.e.xpos-0.5*this.e.width, this.e.ypos-0.5*this.e.height, this.e.width, l*2.8 );
-		env.fillStyle = '#333';
-		env.fill();
+    		env.beginPath();
+    		env.rect(this.e.xpos-0.5*this.e.width, this.e.ypos-0.5*this.e.height, this.e.width, l*2.8 );
+    		env.fillStyle = '#333';
+    		env.fill();
 
 		env.strokeStyle = '#000';
-    env.lineWidth = 1;
+        env.lineWidth = 1;
 
-		if(!this.segments[5]){
-		    this.drawSegment(xstart, ystart+0.5*l, l, this.segmentWidth, 0, 0, env );
-		}
-		if(!this.segments[4]){
-		    this.drawSegment(xstart, ystart+1.5*l, l, this.segmentWidth, 0,  0,env );
-		}
-		if(!this.segments[0]){
-		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth-o, l, this.segmentWidth, 1,  0,env );
-		}
-		if(!this.segments[6]){
-		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l-o, l, this.segmentWidth, 1,  0,env );
-		}
-		if(!this.segments[3]){
-		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l*2-o, l, this.segmentWidth, 1,  0,env );
-		}
-		if(!this.segments[1]){
-		    this.drawSegment(xstart+l, ystart+0.5*l, l, this.segmentWidth, 0,  0,env );
-		}
-		if(!this.segments[2]){
-		    this.drawSegment(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0,  0,env );
-		}
-		if(this.segments[5]){
-		    this.drawGauss(xstart, ystart+0.5*l, l, this.segmentWidth, 0, env );
-		}
-		if(this.segments[4]){
-		    this.drawGauss(xstart, ystart+1.5*l, l, this.segmentWidth, 0, env );
-		}
-		if(this.segments[0]){
-		    this.drawGauss(xstart+0.5*l, ystart+0.5*this.segmentWidth-o, l, this.segmentWidth, 1, env );
-		}
-		if(this.segments[6]){
-		    this.drawGauss(xstart+0.5*l, ystart+0.5*this.segmentWidth+l-o, l, this.segmentWidth, 1, env );
-		}
-		if(this.segments[3]){
-		    this.drawGauss(xstart+0.5*l, ystart+0.5*this.segmentWidth+l*2-o, l, this.segmentWidth, 1, env );
-		}
-		if(this.segments[1]){
-		    this.drawGauss(xstart+l, ystart+0.5*l, l, this.segmentWidth, 0, env );
-		}
-		if(this.segments[2]){
-		    this.drawGauss(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0, env );
-		}
+    		if(!this.segments[5]){
+    		    this.drawSegment(xstart, ystart+0.5*l, l, this.segmentWidth, 0, 0, env );
+    		}
+    		if(!this.segments[4]){
+    		    this.drawSegment(xstart, ystart+1.5*l, l, this.segmentWidth, 0,  0,env );
+    		}
+    		if(!this.segments[0]){
+    		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth-o, l, this.segmentWidth, 1,  0,env );
+    		}
+    		if(!this.segments[6]){
+    		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l-o, l, this.segmentWidth, 1,  0,env );
+    		}
+    		if(!this.segments[3]){
+    		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l*2-o, l, this.segmentWidth, 1,  0,env );
+    		}
+    		if(!this.segments[1]){
+    		    this.drawSegment(xstart+l, ystart+0.5*l, l, this.segmentWidth, 0,  0,env );
+    		}
+    		if(!this.segments[2]){
+    		    this.drawSegment(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0,  0,env );
+    		}
+    		if(this.segments[5]){
+    		    this.drawGauss(xstart, ystart+0.5*l, l, this.segmentWidth, 0, env );
+    		}
+    		if(this.segments[4]){
+    		    this.drawGauss(xstart, ystart+1.5*l, l, this.segmentWidth, 0, env );
+    		}
+    		if(this.segments[0]){
+    		    this.drawGauss(xstart+0.5*l, ystart+0.5*this.segmentWidth-o, l, this.segmentWidth, 1, env );
+    		}
+    		if(this.segments[6]){
+    		    this.drawGauss(xstart+0.5*l, ystart+0.5*this.segmentWidth+l-o, l, this.segmentWidth, 1, env );
+    		}
+    		if(this.segments[3]){
+    		    this.drawGauss(xstart+0.5*l, ystart+0.5*this.segmentWidth+l*2-o, l, this.segmentWidth, 1, env );
+    		}
+    		if(this.segments[1]){
+    		    this.drawGauss(xstart+l, ystart+0.5*l, l, this.segmentWidth, 0, env );
+    		}
+    		if(this.segments[2]){
+    		    this.drawGauss(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0, env );
+    		}
 
-		if(this.segments[5]){
-		    this.drawSegment(xstart, ystart+0.5*l, l, this.segmentWidth, 0, 1, env );
-		}
-		if(this.segments[4]){
-		    this.drawSegment(xstart, ystart+1.5*l, l, this.segmentWidth, 0,  1,env );
-		}
-		if(this.segments[0]){
-		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth-o, l, this.segmentWidth, 1,  1,env );
-		}
-		if(this.segments[6]){
-		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l-o, l, this.segmentWidth, 1,  1,env );
-		}
-		if(this.segments[3]){
-		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l*2-o, l, this.segmentWidth, 1,  1,env );
-		}
-		if(this.segments[1]){
-		    this.drawSegment(xstart+l, ystart+0.5*l, l, this.segmentWidth, 0,  1,env );
-		}
-		if(this.segments[2]){
-		    this.drawSegment(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0,  1,env );
-		}
-		}
+    		if(this.segments[5]){
+    		    this.drawSegment(xstart, ystart+0.5*l, l, this.segmentWidth, 0, 1, env );
+    		}
+    		if(this.segments[4]){
+    		    this.drawSegment(xstart, ystart+1.5*l, l, this.segmentWidth, 0,  1,env );
+    		}
+    		if(this.segments[0]){
+    		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth-o, l, this.segmentWidth, 1,  1,env );
+    		}
+    		if(this.segments[6]){
+    		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l-o, l, this.segmentWidth, 1,  1,env );
+    		}
+    		if(this.segments[3]){
+    		    this.drawSegment(xstart+0.5*l, ystart+0.5*this.segmentWidth+l*2-o, l, this.segmentWidth, 1,  1,env );
+    		}
+    		if(this.segments[1]){
+    		    this.drawSegment(xstart+l, ystart+0.5*l, l, this.segmentWidth, 0,  1,env );
+    		}
+    		if(this.segments[2]){
+    		    this.drawSegment(xstart+l, ystart+1.5*l, l, this.segmentWidth, 0,  1,env );
+    		}
+    		}
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -7030,9 +7057,7 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 	this.keyboardImg = new Image();
 	this.keyboardImg.src = "./images/keyboard/keyboard.png";
 	var parent = this;
-	this.keyboardImg.onload = function(){
-		parent.keyboardImgLoaded = true;
-	}
+
 	this.plug = 1; //0 is loose lines, 1: din bus
 
 	this.save = function(){
@@ -7060,9 +7085,9 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 	this.render = function(canvii){
 	    this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
-		if (this.keyboardImgLoaded) {
+
 			LoadImageToCanvas(canvii['element-bg'].context, this.keyboardImg, this.e.xpos+50, this.e.ypos+35, 0, 100, 35)
-		}
+
 	    }
 	}
 
@@ -7709,16 +7734,11 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 	this.dialImage = new Image();
 	this.dialImage.src = "./images/modem/dial.png";
 	var parent = this;
-	this.dialImage.onload = function(){
-		parent.dialImageLoaded = true;
-	}
+
 	this.plateImageLoaded= false;
 	this.plateImage = new Image();
 	this.plateImage.src = "./images/modem/plate.png";
 	var parent = this;
-	this.plateImage.onload = function(){
-		parent.plateImageLoaded = true;
-	}
 
 	this.dialToIndex = function(index){
 
@@ -7765,7 +7785,7 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		    env.fill();
 		}
 		var env = canvii['element-fg'].context;
-		if (this.dialImageLoaded) {
+
 		    //+ this.spindelA.x this.spindelA.y
 		    LoadImageToCanvas(env, this.plateImage, centerX, centerY,  0, 52.5, 52.5)
 
@@ -7776,7 +7796,7 @@ Miscellaneous['Modem'] = function(x,y,rotation, world){
 		    LoadImageToCanvas(env, this.dialImage, centerX, centerY,  this.dialPosition, 52.5, 52.5)
 			env.shadowColor = "transparent";
 			//this.dialPosition+= 0.01;
-		}
+
 	    		//The dial disc has 10 numbers (1 -> 9 -> 0)
 		if (this.showhover && this.hoveringIndex!=-1 && this.dialInTransit==false) {
 
@@ -7927,9 +7947,7 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 	this.backplane = new Image();
 	this.backplane.src = "./images/tapedrive/backplane.png";
 	var parent = this;
-	this.backplane.onload = function(){
-		parent.backplaneLoaded = true;
-	}
+
 
 	this.on = false;
 	this.forward = true;
@@ -7941,9 +7959,7 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 	this.spindelImage = new Image();
 	this.spindelImage.src = "./images/tapedrive/spindel.png";
 	var parent = this;
-	this.spindelImage.onload = function(){
-		parent.spindelImageLoaded = true;
-	}
+
 	this.defaultSpeed = 0.01;
 	this.maxReadSpeed = 0.05;
 	this.speed = this.defaultSpeed;
@@ -7999,12 +8015,12 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 		if (canvii.updateRequired('element-bg')) {
 		    var env = canvii['element-bg'].context;
 
-		    if (this.backplaneLoaded) {
+
 			    this.imageXoffset = -100;
 			    this.imageYoffset = -80;
 
 			    LoadImageToCanvas(env, this.backplane, this.e.xpos, this.e.ypos,  0, 200 + this.imageXoffset, 175 + this.imageYoffset)
-		    }
+
 		}
 
 		//Draw the spindels:
@@ -8040,11 +8056,10 @@ Miscellaneous['Tape-drive'] = function(x,y,rotation, world){
 		    env.strokeStyle = '#003300';
 		    env.stroke();
 
-		    if (this.spindelImageLoaded) {
 					    //+ this.spindelA.x this.spindelA.y
 			    LoadImageToCanvas(env, this.spindelImage, this.e.xpos+this.spindelA.x+27.5, this.e.ypos-this.spindelA.y-27.5,  this.spindelHeading, 27.8, 27.8)
 			    LoadImageToCanvas(env, this.spindelImage, this.e.xpos+this.spindelB.x+27.5, this.e.ypos-this.spindelB.y-27.5,  this.spindelHeading+0.3, 27.8, 27.8)
-		    }
+
 		}
 
 		this.e.render(canvii, true);
@@ -8217,17 +8232,12 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 	this.meterBack = new Image();
 	this.meterBack.src = "./images/gauges/vintage_black_backplate.png";
 	var parent = this;
-	this.meterBack.onload = function(){
-		parent.meterBackLoaded = true;
-	}
 
 	this.meterFrontLoaded = false;
 	this.meterFront = new Image();
 	this.meterFront.src = "./images/gauges/vintage_black_front.png";
 	var parent = this;
-	this.meterFront.onload = function(){
-		parent.meterFrontLoaded = true;
-	}
+
 	//Frequency mapping vars:
 	this.bits = 8;
 
@@ -8283,12 +8293,11 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		if (canvii.updateRequired('element-bg')) {
 		    var env = canvii['element-bg'].context;
 
-		    if (this.meterBackLoaded) {
-			    this.imageXoffset = -70;
-			    this.imageYoffset = -65;
+		    this.imageXoffset = -70;
+		    this.imageYoffset = -65;
 
-			    LoadImageToCanvas(env, this.meterBack, this.e.xpos, this.e.ypos,  0, 140 + this.imageXoffset, 141 + this.imageYoffset)
-		    }
+		    LoadImageToCanvas(env, this.meterBack, this.e.xpos, this.e.ypos,  0, 140 + this.imageXoffset, 141 + this.imageYoffset)
+
 
 		    canvii['element-bg'].context.textAlign = 'center';
 
@@ -8403,12 +8412,12 @@ MeasurementObjects['Analog-meter'] = function(x,y,rotation, world){
 		env.lineTo(this.e.xpos+Math.sin(this.aEnd)*this.innerRadius,this.e.ypos+Math.cos(this.aEnd)*this.innerRadius)
 		env.stroke()
 		*/
-		if (this.meterFrontLoaded) {
-			this.imageXoffset = -70;
-			this.imageYoffset = -65;
 
-			LoadImageToCanvas(env, this.meterFront, this.e.xpos, this.e.ypos,  0, 140 + this.imageXoffset, 141 + this.imageYoffset)
-		}
+		this.imageXoffset = -70;
+		this.imageYoffset = -65;
+
+		LoadImageToCanvas(env, this.meterFront, this.e.xpos, this.e.ypos,  0, 140 + this.imageXoffset, 141 + this.imageYoffset)
+
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
