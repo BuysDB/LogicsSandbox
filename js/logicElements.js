@@ -2404,6 +2404,7 @@ Output.Screen = function (x,y,rotation,world) {
     this.ioWXstart = -80;
     this.ioRXstart = -140;
     this.ioY = 123;
+    this.world = world;
 
     this.e.connectors['W'] = new Connector(this.ioRXstart, this.ioY, 0, this.e, {connectorType:1,label:'W', lines:7} )
     this.e.connectors['C'] = new Connector(this.ioRXstart+2*12 +10, this.ioY, 0, this.e, {connectorType:1,label:'Clock'});
@@ -2416,13 +2417,11 @@ Output.Screen = function (x,y,rotation,world) {
     this.e.connectors['Pclock'] = new Connector(this.ioRXstart+2*12 +120, this.ioY, 0, this.e, {connectorType:1,label:'Pixel clock'});
 
     this.clock = 0;
-    this.imageFrontLoaded = false;
+
     this.imageFront = new Image();
     this.imageFront.src = "./images/terminal/edges.png";
     var parent = this;
-    this.imageFront.onload = function(){
-	    parent.imageFrontLoaded = true;
-    }
+
     this.hit = function(x,y){
 	    return( this.e.hit(x,y) );
     }
@@ -2459,6 +2458,7 @@ Output.Screen = function (x,y,rotation,world) {
 
     this.xpos = x;
     this.ypos = y;
+
     this.xIndent = 0;
     this.yIndent = 0;
     this.rowDistance = 8;
@@ -2505,24 +2505,33 @@ Output.Screen = function (x,y,rotation,world) {
     }
 
     this.render =  function(canvii){
-	this.e.render(canvii);
-	this.CRT.render(canvii['element-fg'].context);
-	//Draw the screen:
-	this.imageXoffset = this.offsetX;
-	this.imageYoffset = this.offsetY;
-
-	LoadImageToCanvas(canvii['element-fg'].context, this.imageFront, this.e.xpos, this.e.ypos, 0, 161 + this.imageXoffset, 130 + this.imageYoffset)
+        this.imageXoffset = this.offsetX;
+    	this.imageYoffset = this.offsetY;
 
 
-	//Print every character
-	for (var row=0; row<this.rows; row++) {
-	    for (var col=0; col<this.columns; col++) {
+        // Make nice thumbnail
+        if(this.world==undefined){
+            this.e.xpos = this.e.xpos - 110;
+            this.e.ypos = this.e.ypos - 80;
+            //this.e.render(canvii);
+    	    this.CRT.render(canvii['element-bg'].context);
+            LoadImageToCanvas(canvii['element-fg'].context, this.imageFront, this.e.xpos, this.e.ypos, 0, 161 + this.imageXoffset, 130 + this.imageYoffset)
+        } else {
+            this.e.render(canvii);
+    	    this.CRT.render(canvii['element-fg'].context);
+            LoadImageToCanvas(canvii['element-fg'].context, this.imageFront, this.e.xpos, this.e.ypos, 0, 161 + this.imageXoffset, 130 + this.imageYoffset)
+        }
 
-		//this.characterMatrix.getChar(row, col).renderPixels(this.CRT, this.xIndent + this.xpos+(col * this.characterWidth), this.yIndent + this.ypos+(row*this.characterHeigth)+row*this.rowDistance, this.characterWidth, this.characterHeigth);
-		this.characterMatrix.getChar(row, col).renderPixels(this.CRT, this, row, col);
+    	//Draw the screen:
+    	//Print every character
+    	for (var row=0; row<this.rows; row++) {
+    	    for (var col=0; col<this.columns; col++) {
 
-	    }
-	}
+    		//this.characterMatrix.getChar(row, col).renderPixels(this.CRT, this.xIndent + this.xpos+(col * this.characterWidth), this.yIndent + this.ypos+(row*this.characterHeigth)+row*this.rowDistance, this.characterWidth, this.characterHeigth);
+    		this.characterMatrix.getChar(row, col).renderPixels(this.CRT, this, row, col);
+
+    	    }
+    	}
 
     }
     this.cursorTime = 0;
@@ -4668,10 +4677,7 @@ AudioObjects['Speaker'] = function(x,y,rotation, world){
     this.imgObj= new Image();
     this.imgObj.src = "./images/audio/speaker.png";
     var parent = this;
-    this.imageLoaded = false;
-    this.imgObj.onload = function(){
-	    parent.imageLoaded = true;
-    }
+
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
@@ -4711,21 +4717,28 @@ AudioObjects['Amplifier'] = function(x,y,rotation, world){
 
     if (world!=undefined) {
 
-	world.requestAudio();
-	this.gainNode = world.audioContext.createGain();
+    	world.requestAudio();
+    	this.gainNode = world.audioContext.createGain();
 
-	this.e.connectors = {
-	'input':new Connector(-this.e.width/2+10, -10, 0, this.e, {connectorType:1,connectionType:2,audioTarget:this.gainNode,label:'input', lines:1}),
-	'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,connectionType:2,audioSource:this.gainNode,label:'output', lines:1}),
-	'gain':new Connector(-this.e.width/2+10, 10, 0, this.e, {connectorType:1,connectionType:1,label:'gain', lines:1})
-	};
+    	this.e.connectors = {
+    	'input':new Connector(-this.e.width/2+10, -10, 0, this.e, {connectorType:1,connectionType:2,audioTarget:this.gainNode,label:'input', lines:1}),
+    	'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,connectionType:2,audioSource:this.gainNode,label:'output', lines:1}),
+    	'gain':new Connector(-this.e.width/2+10, 10, 0, this.e, {connectorType:1,connectionType:1,label:'gain', lines:1})
+    	};
+    } else {
+        // Make fake connectors
+        this.e.connectors = {
+    	'input':new Connector(-this.e.width/2+10, -10, 0, this.e, {connectorType:1,connectionType:2,audioTarget:1,label:'input', lines:1}),
+    	'output':new Connector(this.e.width/2-10, 0, 0, this.e, {connectorType:2,connectionType:2,audioSource:1,label:'output', lines:1}),
+    	'gain':new Connector(-this.e.width/2+10, 10, 0, this.e, {connectorType:1,connectionType:1,label:'gain', lines:1})
+    	};
     }
 
     this.hit = function(x,y){
 	return( this.e.hit(x,y) );
     }
     this.render = function(canvii){
-	this.e.render(canvii);
+	       this.e.render(canvii);
 	//canvii['element-fg'].context.fillText((0.5+0.5*this.s) + ' , ' + this.s, this.e.xpos, this.e.ypos);
     }
 
@@ -6529,21 +6542,17 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 	this.imgObj= new Image();
 	this.imgObj.src = "./images/knobs/selector.png";
 	var parent = this;
-	this.imageLoaded = false;
-	this.imgObj.onload = function(){
-		parent.imageLoaded = true;
-	}
     this.init = function(){
-	this.selectedLine = 0;
-	this.angle=0;
+    	this.selectedLine = 0;
+    	this.angle=0;
 
-	if (this.bcd) {
-	    this.e.connectors['out'].setLineCount(this.lines);
-	} else {
-	    this.e.connectors['out'].setLineCount( Math.ceil(Math.log(this.lines)/Math.log(2)));
-	}
+    	if (this.bcd) {
+    	    this.e.connectors['out'].setLineCount(this.lines);
+    	} else {
+    	    this.e.connectors['out'].setLineCount( Math.ceil(Math.log(this.lines)/Math.log(2)));
+    	}
 
-	this.updateOutput();
+    	this.updateOutput();
     }
 
 	this.hit = function(x,y){
@@ -6569,7 +6578,7 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 		    }
 		    env.stroke();
 
-		    if (this.imageLoaded) {
+		
 			  env.shadowColor = '#000';
 			env.shadowBlur = 3;
 			env.shadowOffsetX = 1;
@@ -6586,7 +6595,7 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 			LoadImageToCanvas(env, this.imgObj, this.e.xpos + this.switchXoffset, this.e.ypos + this.switchYoffset, this.angle, 29.5, 29.5)
 
 			env.shadowColor = 'transparent';
-		    }
+
 		}
 
 	}
