@@ -477,14 +477,11 @@ function World() {
 		  data:JSON.stringify({
   			'name':this.name,
   			'data':this.saveData
-
-			xhrFields: {
-				 withCredentials: true
-			  }
-
   		}),
-		  contentType:"application/json; charset=utf-8",
-		  dataType:"json",
+
+		xhrFields: { withCredentials: true },
+		contentType:"application/json; charset=utf-8",
+		dataType:"json",
 		  success: function(data){
 
 			console.log(data);
