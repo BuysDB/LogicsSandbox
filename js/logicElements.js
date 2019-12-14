@@ -17,6 +17,14 @@ window.Settings = {
 var pressedKeys = {};
 $(document).keydown(function (e) {
 
+    var el = document.activeElement;
+    try {
+        if (el && el.selectionStart !== undefined || el.isContentEditable) {
+            console.log('skip');
+            return; // active element has caret, do not proceed
+        }
+    } catch (ex) {}
+    
     pressedKeys[e.keyCode] = true;
     if (e.keyCode==27) {
 	world.selectNone();
