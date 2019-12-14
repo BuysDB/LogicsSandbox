@@ -6824,11 +6824,14 @@ Inputs['Selector-knob'] = function(x,y,rotation, world){
 
 Inputs.Pulse = function(x,y,rotation, world){
 
-	this.e = new electronicObject(x,y,rotation,{width:50, height:50, parent:this})
-	this.e.connectors = { 'out':new Connector(15, 0, 0, this.e, {connectorType:2,label:'out'}) };
-	this.interval = 100;
+	this.e = new electronicObject(x,y,rotation,{width:100, height:50, parent:this})
+	this.e.connectors = { 'out':new Connector(37, 0, 0, this.e, {connectorType:2,label:'out'}) };
+	this.interval = 300;
 	this.position = 0;
 	this.pulseDuration = 20;
+
+    this.imgObj= new Image();
+    this.imgObj.src = "./images/ics/timer.png";
 
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
@@ -6836,6 +6839,9 @@ Inputs.Pulse = function(x,y,rotation, world){
 
 	this.render = function(canvii){
 		this.e.render(canvii);
+        if( canvii.updateRequired('element-bg') ){
+            LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos, this.e.ypos, 0,48,25)
+        }
 	}
 
 	this.setInterval = function(i){
