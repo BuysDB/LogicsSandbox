@@ -6094,16 +6094,22 @@ SimpleIcs['BIN-to-7S'] = function(x,y,rotation, world){
 Inputs = {};
 Inputs.Negative = function(x,y,rotation, world){
 
-	this.e = new electronicObject(x,y,rotation,{width:25, height:25,parent:this})
-	this.e.connectors = { 'out':new Connector(0, 0, 0, this.e, {connectorType:2}) };
+	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
+	this.e.connectors = { 'out':new Connector(10, 0, 0, this.e, {connectorType:2}) };
 
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
 
+    this.imgObj= new Image();
+    this.imgObj.src = "./images/misc/ground.png";
+
 	this.render = function(canvii){
-		this.e.render(canvii);
-	}
+    	this.e.render(canvii);
+        if( canvii.updateRequired('element-bg') ){
+            LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos, this.e.ypos, 0,10,1)
+        }
+    }
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
@@ -6122,16 +6128,23 @@ Inputs.Negative = function(x,y,rotation, world){
 
 Inputs.Positive = function(x,y,rotation, world){
 
-	this.e = new electronicObject(x,y,rotation,{width:25, height:25,parent:this})
-	this.e.connectors = { 'out':new Connector(0, 0, 0, this.e, {connectorType:2}) };
+	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
+	this.e.connectors = { 'out':new Connector(8, 0, 0, this.e, {connectorType:2}) };
+    this.imgObj= new Image();
+    this.imgObj.src = "./images/misc/positive.png";
 
 	this.hit = function(x,y){
 		return( this.e.hit(x,y) );
 	}
 
-	this.render = function(canvii){
-		this.e.render(canvii);
-	}
+
+
+    this.render = function(canvii){
+        this.e.render(canvii);
+        if( canvii.updateRequired('element-bg') ){
+            LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos, this.e.ypos, 0,15,10)
+        }
+    }
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
 	}
