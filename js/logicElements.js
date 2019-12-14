@@ -553,6 +553,12 @@ SHIFT_KEY_TO_ASCII = {
 function randInt(min, max) {
     return( Math.floor((Math.random()*max)+1)+min );
 }
+
+function randomSeeded(seed) {
+    var x = Math.sin(seed++) * 10000;
+    return x - Math.floor(x);
+}
+
 function electronicObject(x,y,rotation,settings){
     this.xpos = x || 50;
     this.ypos = y || 50;
@@ -573,12 +579,14 @@ function electronicObject(x,y,rotation,settings){
 	}
     }
 
+
     this.connectors = []
 
     if (settings.parent) {
 	this.parent = settings.parent;
     }
 
+    this.dirtSeed = settings.width || randInt(0,16384); // random seed for the dirt generator
     this.width = settings.width || 15;
     this.height = settings.height || 50;
     this.hoverColor = "#00FF00";
@@ -620,6 +628,40 @@ function electronicObject(x,y,rotation,settings){
      * element-bg (For the element base)
      * effects (For the hovering effect)
      */
+
+    this.renderDirt = function(canvii){
+        var seed = this.dirtSeed
+
+        seed = randomSeeded(seed)
+
+        stainColors = ["rgba(112,57,6,0.03)", "rgba(190,190,190,0.03)"];
+        for(var stain_color_index in stainColors){
+            stain_color = stainColors[stain_color_index];
+            canvii['element-bg'].context.strokeStyle = stain_color;
+
+            for(var stainIndex=0; stainIndex<30; stainIndex+=1){
+                seed = randomSeeded(seed)
+                canvii['element-bg'].context.lineWidth=seed*2 + 2;
+
+               canvii['element-bg'].context.beginPath();
+
+               seed = randomSeeded(seed)
+               var start_x = seed * this.width + this.xpos-(this.width/2)
+               seed = randomSeeded(seed)
+               var end_x = seed * this.width + this.xpos-(this.width/2)
+               seed = randomSeeded(seed)
+               var start_y = seed * this.height + this.ypos-(this.height/2)
+               seed = randomSeeded(seed)
+               var end_y = seed * this.height + this.ypos-(this.height/2)
+
+               canvii['element-bg'].context.moveTo(start_x,start_y);
+               canvii['element-bg'].context.lineTo(end_x, end_y);
+               canvii['element-bg'].context.stroke();
+
+            }}
+
+    }
+
     this.render = function(canvii, noDrawPlane){
 
 	    noDrawPlane = noDrawPlane || false;
@@ -640,7 +682,9 @@ function electronicObject(x,y,rotation,settings){
 		    canvii['element-bg'].context.lineTo(this.boundingCoordinates[0].x,this.boundingCoordinates[0].y)
 		    //End
 		    */
-		    CanvasFunctions.drawRoundedRectangle(canvii['element-bg'].context, this.xpos-0.5*this.width, this.ypos-0.5*this.height, this.width, this.height, 4);
+		    CanvasFunctions.drawRoundedRectangle(
+                canvii['element-bg'].context, this.xpos-0.5*this.width,
+                this.ypos-0.5*this.height, this.width, this.height, 4);
 		    canvii['element-bg'].context.fillStyle=this.getColor();
 		    canvii['element-bg'].context.strokeStyle = "#CCC";
 		    canvii['element-bg'].context.lineWidth=1;
@@ -653,6 +697,7 @@ function electronicObject(x,y,rotation,settings){
 		    canvii['element-bg'].context.fill();
 		    canvii['element-bg'].context.shadowColor = "transparent";
 		    canvii['element-bg'].context.stroke();
+            this.renderDirt(canvii);
 
 		}
 	    }
@@ -7225,7 +7270,7 @@ Inputs['Keyboard'] = function(x,y,rotation, world){
 	    this.e.render(canvii);
 	    if( canvii.updateRequired('element-bg') ){
 
-			LoadImageToCanvas(canvii['element-bg'].context, this.keyboardImg, this.e.xpos+50, this.e.ypos+35, 0, 100, 35)
+			LoadImageToCanvas(canvii['element-bg'].context, this.keyboardImg, this.e.xpos+50, this.e.ypos+35, 0, 102, 37)
 
 	    }
 	}
