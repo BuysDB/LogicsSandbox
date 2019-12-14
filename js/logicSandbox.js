@@ -472,7 +472,7 @@ function World() {
 		// Submit the save
 
 		$.ajax({
-		  url:'http://87.209.245.2:5000/save',
+		  url:'http://87.209.245.2:5000/save/',
 		  type:"POST",
 		  data:JSON.stringify({
   			'name':this.name,
