@@ -476,7 +476,6 @@ function World() {
 		  type:"POST",
 		  data:JSON.stringify({
   			'name':this.name,
-  			'user':user,
   			'data':this.saveData
   		}),
 		  contentType:"application/json; charset=utf-8",
