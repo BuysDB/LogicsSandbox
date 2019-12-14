@@ -102,15 +102,47 @@ EditorModi.array = function(){
 
 
 
+function verifySavingName(value){
+	if(value===undefined){
+		return false;
+	}
+	if(value.length>3){
+		return true;
+	}
+	return false;
+}
 
+function verifySavingInput(){
+	v = $('#simulationName').val()
+	v = v.replace(/[^a-z0-9 ]/gi,'');
+	$('#simulationName').val(v);
+	$('#save').prop('disabled', !verifySavingName(v));
+	return verifySavingName(v)
+}
 
 function Editor(appendTo, canvii){
 
-	//It is prepend now, sorry!
-
 	$(appendTo).prepend('<div id="editorMenuBar"></div><div id="editor"></div>');
-	 $('#editorMenuBar').prepend('<button id="logout">Buysdb.nl</button>').on('click', function(){
+	 $('#editorMenuBar').prepend('<button id="logout">Buysdb.nl</button>')
+	 $('#logout').on('click', function(){
 			document.location.href = "http://www.buysdb.nl/index.php?page_id=wip_logics_sandbox_first_pre_alpha";
+	 });
+	 $('#editorMenuBar').prepend('<input style="width:180px; z-index:1000;" type="text" placeholder="name of you simulation" id="simulationName"></input><button id="save">Save</button>')
+
+
+	 $('#simulationName').keyup(function(e) {
+		// Verify:
+		verifySavingInput();
+	 })
+	 verifySavingInput();
+
+	 $('#save').on('click', function(){
+		if( verifySavingInput() ){
+			console.log('Saving world')
+			world.save( $('#simulationName').val() )
+		} else {
+			console.log('Invalid input')
+		}
 	 });
 
 	this.modi = ['place', 'place_array']
@@ -329,10 +361,6 @@ function Editor(appendTo, canvii){
 	$('<div id="saveList"></div>').insertAfter( "#worldSimWrapper" );
 	$('<div id="config"></div>').insertAfter( "#worldSimWrapper" );
 
-
-
-
-
 }
 
 function Wind(){
@@ -411,9 +439,10 @@ function World() {
 
 	}
 
-	this.save = function(){
+	this.save = function(name){
 		//Pause the simulation..
 		this.pause = true;
+		this.name = name;
 		//Wait on the frame to finish
 		this.pauseActions.push('save');
 		this.pauseActions.push('continue');
@@ -438,6 +467,33 @@ function World() {
 				this.saveData.push( savedObject )
 			}
 		}
+
+
+		// Submit the save
+
+		$.ajax({
+		  url:'http://87.209.245.2:5000/save',
+		  type:"POST",
+		  data:JSON.stringify({
+  			'name':this.name,
+  			'user':user,
+  			'data':this.saveData
+  		}),
+		  contentType:"application/json; charset=utf-8",
+		  dataType:"json",
+		  success: function(data){
+
+			console.log(data);
+			alert( "winner" );
+		  },
+	        error: function(e) {
+				console.log(e);
+	            alert('Error occured');
+	        }
+		})
+
+
+
 
 	}
 
