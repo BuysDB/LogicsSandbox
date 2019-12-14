@@ -3940,6 +3940,9 @@ BasicGates.Nor.prototype = new Gate();
 LatchesAndFlipFlops = {};
 LatchesAndFlipFlops['SR-Latch'] = function(x,y,rotation, world){
 	this.e = new electronicObject(x,y,rotation,{width:50, height:50,parent:this})
+    this.imgObj= new Image();
+    this.imgObj.src = "./images/gates/sr.png";
+
 	this.e.connectors = {
 		'set':new Connector(-15, -15, 0, this.e, {connectorType:1,label:'S'}),
 		'reset':new Connector(-15, 15, 0, this.e, {connectorType:1,label:'R'}),
@@ -3954,6 +3957,20 @@ LatchesAndFlipFlops['SR-Latch'] = function(x,y,rotation, world){
 
 	this.render = function(canvii){
 		this.e.render(canvii);
+
+        if( canvii.updateRequired('element-bg') ){
+
+            LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos, this.e.ypos, 0,25,25)
+
+        }
+
+        /*Some code to load the images on the thumbnails on a single render pass.
+        var parent = this;
+        if (this.world==undefined){
+            LoadImageToCanvas(canvii['element-bg'].context, parent.imgObj, parent.e.xpos, parent.e.ypos, 0,25,25)
+
+        }*/
+
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -3997,6 +4014,8 @@ LatchesAndFlipFlops['SR-Flip-Flop'] = function(x,y,rotation, world){
 		'Q':new Connector(15, -15, 0, this.e, {connectorType:2,label:'Q'}),
 		'Qn1':new Connector(15, 15, 0, this.e, {connectorType:2,label:'Qn+1'})
 		};
+    this.imgObj= new Image();
+    this.imgObj.src = "./images/gates/sr_flip.png";
 	this.Q = new State();
 	this.Q.set(-1)
 	this.hit = function(x,y){
@@ -4005,6 +4024,10 @@ LatchesAndFlipFlops['SR-Flip-Flop'] = function(x,y,rotation, world){
 
 	this.render = function(canvii){
 		this.e.render(canvii);
+        if( canvii.updateRequired('element-bg') ){
+            LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos, this.e.ypos, 0,25,25)
+        }
+
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
@@ -4053,6 +4076,8 @@ LatchesAndFlipFlops['JK-Flip-Flop'] = function(x,y,rotation, world){
 		'Q':new Connector(15, -15, 0, this.e, {connectorType:2,label:'Q'}),
 		'Qn1':new Connector(15, 15, 0, this.e, {connectorType:2,label:'Qn+1'})
 		};
+    this.imgObj= new Image();
+    this.imgObj.src = "./images/gates/jk_flip.png";
 	this.Q = new State();
 	this.Q.set(-1)
 	this.edgeTrigger = new EdgeTrigger(this.e.connectors['clock'].state, 0);
@@ -4062,6 +4087,9 @@ LatchesAndFlipFlops['JK-Flip-Flop'] = function(x,y,rotation, world){
 
 	this.render = function(canvii){
 		this.e.render(canvii);
+        if( canvii.updateRequired('element-bg') ){
+            LoadImageToCanvas(canvii['element-bg'].context, this.imgObj, this.e.xpos, this.e.ypos, 0,25,25)
+        }
 	}
 
 	this.hover = function(x,y){return(this.e.hover(x,y))
