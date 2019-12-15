@@ -543,7 +543,9 @@ function World() {
 		  	const tile = document.createElement("LI");
 		    tile.setAttribute("class", "save-tile");
 		    tile.setAttribute("id", "save-tile-" + i);
-		    const title = document.createElement("H3");
+		    const title = document.createElement("div");
+			title.setAttribute('class','centered')
+			title.setAttribute('style','color:#FFF; font-family:Sans-serif')
 		    const t = document.createTextNode(DB[i].title);
 		    title.appendChild(t);
 		    tile.appendChild(title);
@@ -555,10 +557,18 @@ function World() {
 			tile.setAttribute("saveName",DB[i].saveName)
 		  	container.appendChild(tile);
 			tile.addEventListener("click", function(event){
-				console.log('Got click!')
-				var targetElement = event.target || event.srcElement;
+
+				var targetElement = event.currentTarget ;
 				console.log(targetElement)
-				world.load( targetElement.getAttribute('user'),  targetElement.getAttribute('saveName')) });
+				console.log('Got click! ' + targetElement.getAttribute('user')  + ' ' +  targetElement.getAttribute('saveName'))
+				if( targetElement.getAttribute('user')!==null ){
+					console.log(targetElement.getAttribute('user'))
+					world.load( targetElement.getAttribute('user'),  targetElement.getAttribute('saveName'))
+
+					setTimeout( function(){ window.location.reload(false) }, 500 ) // @todo remove handlers
+				}
+			});
+
 			//@todo:
 		  }
 
@@ -674,6 +684,8 @@ function World() {
 		  var observer = new IntersectionObserver(callback, options);
 		  observer.observe(document.querySelector("#save-tile-0"));
 		  observer.observe(document.querySelector(`#save-tile-${listSize - 1}`));
+
+
 		}
 
 		const start = () => {
@@ -692,7 +704,7 @@ function World() {
 					for(user in data){
 						for(save_index in data[user]){
 							//h += '<div>' + data[user][save_index] + ' by <span>' + user + '</span></div>'
-							DB.push({'user':user, 'saveName':data[user][save_index],'title':data[user][save_index] + ' by ' + user , imgSrc:_getCatImg() })
+							DB.push({'user':user, 'saveName':data[user][save_index],'title':data[user][save_index] + ' by ' + user , imgSrc:'http://87.209.245.2/LogicsSandbox/thumbs/' + user + '/' + data[user][save_index] + '.png' })
 							DBSize += 1
 						}
 					}
@@ -831,7 +843,9 @@ function World() {
 	this.loadFunction = function(){
 	    this.clear();
 	    saveStructure = this.loadSaveData
-
+		if(saveStructure===undefined){
+			return
+		}
 	    var version = saveStructure.dataFormatVersion;
 	    for (var objectIndex in saveStructure.data) {
 
@@ -1714,10 +1728,17 @@ world.tick();
 // Load save if defined in URL
 url_vars = getUrlVars();
 if(  ('user' in url_vars) && ('saveName' in url_vars) ){
+
 	if (('shadow' in url_vars) &&  (url_vars['shadow']=='false')) {
 		window.Settings['drawShadows'] = false
 	}
-	
+
+	if (('hideBackground' in url_vars) &&  (url_vars['hideBackground']=='true')) {
+		console.log('Hiding background')
+		$('#world_1').hide()
+		$('#world_4').hide()
+	}
+
 	if( ('embed' in url_vars) &&  (url_vars['embed']=='true')){
 		$('#editorMenuBar').hide();
 		$('#editor').hide();
