@@ -56,13 +56,8 @@ AvailableObjects = {
 	{
 		'name':'Measurement',
 		'contents':MeasurementObjects
-
 	}
-
-
-
 }
-
 
 
 EditorModi = {}
@@ -70,16 +65,7 @@ EditorModi.array = function(){
 
 		this.pointA = Coord();
 		this.pointB = Coord();
-
-
-		this.render = function(){
-
-
-
-		}
-
-
-
+		this.render = function(){}
 		this.leftClick = function( position, n ){
 
 			if (n==0) {
@@ -90,17 +76,8 @@ EditorModi.array = function(){
 				this.pointB.x = position.x
 				this.pointB.y = position.y
 			}
-
-
 		}
-
-
-
-
-
 	}
-
-
 
 function verifySavingName(value){
 	if(value===undefined){
@@ -120,6 +97,34 @@ function verifySavingInput(){
 	return verifySavingName(v)
 }
 
+function removeParam(key, sourceURL) { // https://stackoverflow.com/questions/16941104/remove-a-parameter-to-the-url-with-javascript
+    var rtn = sourceURL.split("?")[0],
+        param,
+        params_arr = [],
+        queryString = (sourceURL.indexOf("?") !== -1) ? sourceURL.split("?")[1] : "";
+    if (queryString !== "") {
+        params_arr = queryString.split("&");
+        for (var i = params_arr.length - 1; i >= 0; i -= 1) {
+            param = params_arr[i].split("=")[0];
+            if (param === key) {
+                params_arr.splice(i, 1);
+            }
+        }
+        rtn = rtn + "?" + params_arr.join("&");
+    }
+    return rtn;
+}
+
+function getUrlVars() { // from https://stackoverflow.com/a/20097994
+	var vars = {};
+	var parts = window.location.href.replace(/[?&]+([^=&]+)=([^&]*)/gi,
+	function(m,key,value) {
+	  vars[key] = value;
+	});
+	return vars;
+}
+
+
 function Editor(appendTo, canvii){
 
 	$(appendTo).prepend('<div id="editorMenuBar"></div><div id="editor"></div>');
@@ -130,7 +135,6 @@ function Editor(appendTo, canvii){
 	 $('#editorMenuBar').prepend('<button id="loadlist">Load</button><input style="width:180px; z-index:1000;" type="text" placeholder="name of you simulation" id="simulationName"></input><button id="save">Save</button>')
 
 	  $('#loadlist').on('click', function(){
-
 		  world.drawSaveList()
 	  });
 
@@ -184,11 +188,8 @@ function Editor(appendTo, canvii){
 					world.addObject(new this.selectedCatalogObject(points[index].x, points[index].y, 0, world))
 				}
 				this.timesClicked = 0;
-
 			}
-
 	}
-
 
 	this.mouseDown = function(x,y){
 
@@ -255,9 +256,7 @@ function Editor(appendTo, canvii){
 			this.html += '<div class="editorCatalogGroup"><h3>'+AvailableObjects[groupId].name+'</h3>'
 
 			for(var objectId in AvailableObjects[groupId].contents){
-
 				this.html += '<div class="editorCatalogObject" id="'+groupId+'_'+objectId+'"><div class="titleBox" style="background-color:'+getColourFromGroup('5_norm',index)+';">' + objectId + '</div><canvas id="canvas_'+groupId+'_'+objectId+'" width="100px" height="100px"></canvas></div>';
-
 			}
 			this.html += "</div>"
 			index += 1;
@@ -287,9 +286,7 @@ function Editor(appendTo, canvii){
 				o.render(c);
 				this.liveAvailableObjects[groupId+'_'+objectId] = (o)
 				}
-
 			}
-
 		}
 
 		$('.editorCatalogObject').on('click', function(e, i){
@@ -334,9 +331,7 @@ function Editor(appendTo, canvii){
 			    };
 		}
 
-
 		$('#config').html('');
-
 		for(var index in conf){
 			var c = conf[index];
 			var id = 'slider_' + index;
@@ -356,15 +351,11 @@ function Editor(appendTo, canvii){
 
 			$( '#'+id+'_amount' ).val( $( "#"+id ).slider( "value" ) );
 		}
-
-
 	}
 
 	this.drawCatalog()
-
 	$('<div id="saveList"></div>').insertAfter( "#worldSimWrapper" );
 	$('<div id="config"></div>').insertAfter( "#worldSimWrapper" );
-
 }
 
 function Wind(){
@@ -377,7 +368,6 @@ function Wind(){
 
 		this.direction = this.direction%(Math.PI*2)
 
-
 		if (Math.random()>0.90) {
 
 			if (Math.random()>0.98) {
@@ -387,9 +377,6 @@ function Wind(){
 			}
 
 		}
-
-
-
 		var diff = getShortAngle( this.direction, this.target);
 		this.direction += 0.1*diff;
 	}
@@ -463,26 +450,23 @@ function World() {
 				//Also store e data;
 				if (this.objects[objectIndex].e!=undefined) {
 				    if (this.objects[objectIndex].e.colorId!=undefined) {
-					savedObject.colorId = this.objects[objectIndex].e.colorId;
+						savedObject.colorId = this.objects[objectIndex].e.colorId;
 				    }
 				}
-
 				this.saveData.push( savedObject )
 			}
 		}
 
 		// Create thumbnail:
-
-		thumbData = this.generateThumb(800,600)
-
+		//thumbData = this.generateThumb(800,600)
 		// Submit the save
 		$.ajax({
 		  url:'http://87.209.245.2:5000/save',
 		  type:"POST",
 		  data:JSON.stringify({
   			'name':this.name,
-  			'data':this.saveData,
-			'thumbnail': thumbData
+  			'data':this.saveData
+			//'thumbnail': thumbData
   		}),
 
 		xhrFields: { withCredentials: true },
@@ -500,29 +484,253 @@ function World() {
 		})
 	}
 
-
+	this.destroySaveList = function(){
+		$('.coverAll').html('')
+		$('.coverAll').hide()
+	}
 	this.drawSaveList = function(){
 
+		$('.coverAll').html('<div id="container"><ul class="save-list" style="height: 100%; overflow-y: scroll; top-padding: 0px; bottom-padding: 0px"></ul></div>')
 		$('.coverAll').show()
 
-		// Submit the save
+
+		const _getCatImg = () => {
+		  const randomNum = () => {
+		    return Math.floor(Math.random() * 100000);
+		  };
+		  const url = "https://source.unsplash.com/collection/139386/100x100/?sig=";
+		  return url + randomNum();
+		};
+
+
+
+		let topSentinelPreviousY = 0;
+		let topSentinelPreviousRatio = 0;
+		let bottomSentinelPreviousY = 0;
+		let bottomSentinelPreviousRatio = 0;
+
+		let listSize = 20;
+		let DBSize = 200;
+
+		const initDB = num => {
+			const db = [];
+		  for (let i = 0; i < num; i++) {
+		  	db.push({
+		    	catCounter: i,
+		      title: `save image number ${i}`,
+		      imgSrc: _getCatImg()
+		    })
+		  }
+		  return db;
+		}
+
+		let DB = [];
+
+		let currentIndex = 0;
+
+		const initList = num => {
+			const container = document.querySelector(".save-list");
+
+		  for (let i = 0; i < num; i++) {
+		  	const tile = document.createElement("LI");
+		    tile.setAttribute("class", "save-tile");
+		    tile.setAttribute("id", "save-tile-" + i);
+		    const title = document.createElement("H3");
+		    const t = document.createTextNode(DB[i].title);
+		    title.appendChild(t);
+		    tile.appendChild(title);
+		    const img = document.createElement("IMG");
+		    img.setAttribute("src", DB[i].imgSrc);
+
+		    tile.appendChild(img);
+			tile.setAttribute("user",DB[i].user)
+			tile.setAttribute("saveName",DB[i].saveName)
+		  	container.appendChild(tile);
+			tile.addEventListener("click", function(event){
+				console.log('Got click!')
+				var targetElement = event.target || event.srcElement;
+				console.log(targetElement)
+				world.load( targetElement.getAttribute('user'),  targetElement.getAttribute('saveName')) });
+			//@todo:
+		  }
+
+		}
+
+		const getSlidingWindow = isScrollDown => {
+			const increment = listSize / 2;
+			let firstIndex;
+
+		  if (isScrollDown) {
+		  	firstIndex = currentIndex + increment;
+		  } else {
+		    firstIndex = currentIndex - increment - listSize;
+		  }
+
+		  if (firstIndex < 0) {
+		  	firstIndex = 0;
+		  }
+
+		  return firstIndex;
+		}
+
+		const recycleDOM = firstIndex => {
+			for (let i = 0; i < listSize; i++) {
+		  	const tile = document.querySelector("#save-tile-" + i);
+		    tile.firstElementChild.innerText = DB[i + firstIndex].title;
+		    tile.lastChild.setAttribute("src", DB[i + firstIndex].imgSrc);
+		  }
+		}
+
+		const getNumFromStyle = numStr => Number(numStr.substring(0, numStr.length - 2));
+
+		const adjustPaddings = isScrollDown => {
+			const container = document.querySelector(".save-list");
+		  const currentPaddingTop = getNumFromStyle(container.style.paddingTop);
+		  const currentPaddingBottom = getNumFromStyle(container.style.paddingBottom);
+		  const remPaddingsVal = 170 * (listSize / 2);
+			if (isScrollDown) {
+		  	container.style.paddingTop = currentPaddingTop + remPaddingsVal + "px";
+		    container.style.paddingBottom = currentPaddingBottom === 0 ? "0px" : currentPaddingBottom - remPaddingsVal + "px";
+		  } else {
+		  	container.style.paddingBottom = currentPaddingBottom + remPaddingsVal + "px";
+		    container.style.paddingTop = currentPaddingTop === 0 ? "0px" : currentPaddingTop - remPaddingsVal + "px";
+
+		  }
+		}
+
+		const topSentCallback = entry => {
+			if (currentIndex === 0) {
+				const container = document.querySelector(".save-list");
+		  	container.style.paddingTop = "0px";
+		  	container.style.paddingBottom = "0px";
+		  }
+
+		  const currentY = entry.boundingClientRect.top;
+		  const currentRatio = entry.intersectionRatio;
+		  const isIntersecting = entry.isIntersecting;
+
+		  // conditional check for Scrolling up
+		  if (
+		    currentY > topSentinelPreviousY &&
+		    isIntersecting &&
+		    currentRatio >= topSentinelPreviousRatio &&
+		    currentIndex !== 0
+		  ) {
+		    const firstIndex = getSlidingWindow(false);
+		    adjustPaddings(false);
+		    recycleDOM(firstIndex);
+		    currentIndex = firstIndex;
+		  }
+
+		  topSentinelPreviousY = currentY;
+		  topSentinelPreviousRatio = currentRatio;
+		}
+
+		const botSentCallback = entry => {
+			if (currentIndex === DBSize - listSize) {
+		  	return;
+		  }
+		  const currentY = entry.boundingClientRect.top;
+		  const currentRatio = entry.intersectionRatio;
+		  const isIntersecting = entry.isIntersecting;
+
+		  // conditional check for Scrolling down
+		  if (
+		    currentY < bottomSentinelPreviousY &&
+		    currentRatio > bottomSentinelPreviousRatio &&
+		    isIntersecting
+		  ) {
+		    const firstIndex = getSlidingWindow(true);
+		    adjustPaddings(true);
+		    recycleDOM(firstIndex);
+		    currentIndex = firstIndex;
+		  }
+
+		  bottomSentinelPreviousY = currentY;
+		  bottomSentinelPreviousRatio = currentRatio;
+		}
+
+		const initIntersectionObserver = () => {
+		  const options = {}
+
+		  const callback = entries => {
+		    entries.forEach(entry => {
+		      if (entry.target.id === 'save-tile-0') {
+		        topSentCallback(entry);
+		      } else if (entry.target.id === `save-tile-${listSize - 1}`) {
+		        botSentCallback(entry);
+		      }
+		    });
+		  }
+
+		  var observer = new IntersectionObserver(callback, options);
+		  observer.observe(document.querySelector("#save-tile-0"));
+		  observer.observe(document.querySelector(`#save-tile-${listSize - 1}`));
+		}
+
+		const start = () => {
+
+
+			DBSize = 0;
+			$.ajax({
+				url:'http://87.209.245.2:5000/list',
+				type:"GET",
+				xhrFields: { withCredentials: true },
+				contentType:"application/json; charset=utf-8",
+				dataType:"json",
+				success: function(data){
+					console.log(data)
+					//var h = ""
+					for(user in data){
+						for(save_index in data[user]){
+							//h += '<div>' + data[user][save_index] + ' by <span>' + user + '</span></div>'
+							DB.push({'user':user, 'saveName':data[user][save_index],'title':data[user][save_index] + ' by ' + user , imgSrc:_getCatImg() })
+							DBSize += 1
+						}
+					}
+					listSize = Math.min(listSize, DBSize)
+					initList( listSize );
+					initIntersectionObserver();
+
+				},
+				error: function(e) {
+					console.log(e);
+					alert('Error occured');
+				}
+			})
+
+
+
+		}
+		start();
+
+	}
+
+	this.load = function(user, saveName){
+
 		$.ajax({
-		  url:'http://87.209.245.2:5000/list',
+		  url:'http://87.209.245.2:5000/load?user='+user + '&name='+ saveName,
 		  type:"GET",
 		xhrFields: { withCredentials: true },
 		contentType:"application/json; charset=utf-8",
 		dataType:"json",
 		  success: function(data){
+			  console.log("Loading save " + user + ' ' +  saveName )
+			  console.log(data)
+			  world.loadSaveData = {data:data}
+			  world.pauseActions.push('load');
+			  world.pauseActions.push('continue');
+			  world.pause=true;
+			  // Hide the loader...
+			  world.destroySaveList();
 
-			console.log(data)
-			var h = ""
-			for(user in data){
-				for(save_index in data[user]){
-					h += '<div>' + data[user][save_index] + ' by <span>' + user + '</span></div>'
+			  var currURL= window.location.href; //get current address
 
-				}
-			}
-			$('.coverAll').html(h)
+		      var afterDomain= currURL.substring(currURL.lastIndexOf('/') + 1);
+		      //2- get the part before '?'
+		      var beforeQueryString= afterDomain.split("?")[0];
+
+		  	window.history.pushState({}, document.title, beforeQueryString + '?user=' + user + '&saveName=' + saveName);
 
 		  },
 	        error: function(e) {
@@ -530,17 +738,6 @@ function World() {
 	            alert('Error occured');
 	        }
 		})
-
-
-	}
-
-
-	this.load = function(saveStructure){
-
-		this.loadSaveData =  JSON.parse(saveStructure);
-		this.pauseActions.push('load');
-		this.pauseActions.push('continue');
-		this.pause=true;
 
 	}
 
@@ -609,7 +806,6 @@ function World() {
 		this.pauseActions.push('resize');
 		this.pauseActions.push('continue');
 	}
-
 
 
 	this.clear = function(){
@@ -1332,6 +1528,8 @@ $(document).ready( function(){
 
 	document.editor = new Editor('.simWrapper')
 	world = new World();
+
+
 	$('#loader').hide();
 
 	$( window ).resize(function() {
@@ -1384,7 +1582,8 @@ $(document).ready( function(){
 
 
 
-	}, false);
+	}
+	, false);
 
 	canvas.addEventListener('mouseup', function(evt) {
 		 if (world.dragging) {
@@ -1494,4 +1693,14 @@ setInterval( function(){
 
 }, 50 );
 world.tick();
+
+// Load save if defined in URL
+url_vars = getUrlVars();
+if(  ('user' in url_vars) && ('saveName' in url_vars) ){
+	world.load(url_vars['user'], url_vars['saveName']);
+
+
+}
+
+
 })

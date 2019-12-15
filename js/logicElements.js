@@ -696,10 +696,10 @@ function electronicObject(x,y,rotation,settings){
 		    canvii['element-bg'].context.strokeStyle = "#CCC";
 		    canvii['element-bg'].context.lineWidth=1;
 		    if(window.Settings.drawShadows){
-			canvii['element-bg'].context.shadowColor = '#222';
-			canvii['element-bg'].context.shadowBlur = 5;
-			canvii['element-bg'].context.shadowOffsetX = 2;
-			canvii['element-bg'].context.shadowOffsetY = 2;
+    			canvii['element-bg'].context.shadowColor = '#222';
+    			canvii['element-bg'].context.shadowBlur = 5;
+    			canvii['element-bg'].context.shadowOffsetX = 2;
+    			canvii['element-bg'].context.shadowOffsetY = 2;
 		    }
 		    canvii['element-bg'].context.fill();
 		    canvii['element-bg'].context.shadowColor = "transparent";
@@ -901,13 +901,14 @@ function Canvii(parentId,baseId){
     this.shortCuts = {}
     //The z-index decides the order of the canvas, the alias allows fast access to the canvas
     this.initCanvas = function(zIndex,alias){
-	var id = this.baseId+'_'+zIndex;
-	$('#'+this.parentId).prepend('<canvas id="'+id+'" width="'+this.width +'px" height="'+this.height +'px" style="position:absolute; left:210px; z-index:'+zIndex+'"></canvas>');
-	this.canvii[zIndex] = {canvas:document.getElementById(id), id:id, doTranslate:true, context:document.getElementById(id).getContext("2d"), requiresUpdate:true};
-	if (alias!=undefined) {
-	    this[alias] = this.canvii[zIndex];
-	}
+    	var id = this.baseId+'_'+zIndex;
+    	$('#'+this.parentId).prepend('<canvas id="'+id+'" width="'+this.width +'px" height="'+this.height +'px" style="position:absolute; left:210px; z-index:'+zIndex+'"></canvas>');
+    	this.canvii[zIndex] = {canvas:document.getElementById(id), id:id, doTranslate:true, context:document.getElementById(id).getContext("2d"), requiresUpdate:true};
+    	if (alias!=undefined) {
+    	    this[alias] = this.canvii[zIndex];
+    	}
     }
+
 
     this.registerUpdate = function(alias){
 	this[alias].requiresUpdate = false;
@@ -945,22 +946,22 @@ function Canvii(parentId,baseId){
 
     this.registerCanvas = function(id){
 
-	if ($('#'+id).length == 0) {
-	    console.warn('Canvii.registerCanvas: tried to register a canvas which does not exist! '+id);
-	    return(false)
-	}
+    	if ($('#'+id).length == 0) {
+    	    console.warn('Canvii.registerCanvas: tried to register a canvas which does not exist! '+id);
+    	    return(false)
+    	}
 
-	var z = $('#'+id).css('z-index');
-	if (z==undefined || z=='auto') {
-	    if (this.canvii[0]==undefined) {
-		this.canvii[0] = {canvas:document.getElementById(id), id:id,  doTranslate:true, context:document.getElementById(id).getContext("2d"), requiresUpdate:true};
+    	var z = $('#'+id).css('z-index');
+    	if (z==undefined || z=='auto') {
+    	    if (this.canvii[0]==undefined) {
+    		this.canvii[0] = {canvas:document.getElementById(id), id:id,  doTranslate:true, context:document.getElementById(id).getContext("2d"), requiresUpdate:true};
 
-	    } else {
-		throw new Error('Canvii.registerCanvas: tried to register a canvas with no z-index attribute, z0 already taken');
-	    }
-	} else {
-	    this.canvii[z] = {canvas:document.getElementById(id), id:id,  doTranslate:true,  context:document.getElementById(id).getContext("2d"), requiresUpdate:true};
-	}
+    	    } else {
+    		throw new Error('Canvii.registerCanvas: tried to register a canvas with no z-index attribute, z0 already taken');
+    	    }
+    	} else {
+    	    this.canvii[z] = {canvas:document.getElementById(id), id:id,  doTranslate:true,  context:document.getElementById(id).getContext("2d"), requiresUpdate:true};
+    	}
 
     }
 
