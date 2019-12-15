@@ -127,8 +127,12 @@ function Editor(appendTo, canvii){
 	 $('#logout').on('click', function(){
 			document.location.href = "http://www.buysdb.nl/index.php?page_id=wip_logics_sandbox_first_pre_alpha";
 	 });
-	 $('#editorMenuBar').prepend('<input style="width:180px; z-index:1000;" type="text" placeholder="name of you simulation" id="simulationName"></input><button id="save">Save</button>')
+	 $('#editorMenuBar').prepend('<button id="loadlist">Load</button><input style="width:180px; z-index:1000;" type="text" placeholder="name of you simulation" id="simulationName"></input><button id="save">Save</button>')
 
+	  $('#loadlist').on('click', function(){
+
+		  world.drawSaveList()
+	  });
 
 	 $('#simulationName').keyup(function(e) {
 		// Verify:
@@ -394,7 +398,6 @@ function Wind(){
 
 function World() {
 
-
 	this.canvii = new Canvii('worldSimWrapper','world');
 	this.canvii.initCanvas(1,'background'); //Always static
 	this.canvii.initCanvas(4,'grid'); //Changes only when viewport moves
@@ -468,15 +471,18 @@ function World() {
 			}
 		}
 
+		// Create thumbnail:
+
+		thumbData = this.generateThumb(800,600)
 
 		// Submit the save
-
 		$.ajax({
 		  url:'http://87.209.245.2:5000/save',
 		  type:"POST",
 		  data:JSON.stringify({
   			'name':this.name,
-  			'data':this.saveData
+  			'data':this.saveData,
+			'thumbnail': thumbData
   		}),
 
 		xhrFields: { withCredentials: true },
@@ -492,20 +498,84 @@ function World() {
 	            alert('Error occured');
 	        }
 		})
+	}
 
 
+	this.drawSaveList = function(){
+
+		$('.coverAll').show()
+
+		// Submit the save
+		$.ajax({
+		  url:'http://87.209.245.2:5000/list',
+		  type:"GET",
+		xhrFields: { withCredentials: true },
+		contentType:"application/json; charset=utf-8",
+		dataType:"json",
+		  success: function(data){
+
+			console.log(data)
+			var h = ""
+			for(user in data){
+				for(save_index in data[user]){
+					h += '<div>' + data[user][save_index] + ' by <span>' + user + '</span></div>'
+
+				}
+			}
+			$('.coverAll').html(h)
+
+		  },
+	        error: function(e) {
+				console.log(e);
+	            alert('Error occured');
+	        }
+		})
 
 
 	}
 
-	this.load = function(saveStructure){
 
+	this.load = function(saveStructure){
 
 		this.loadSaveData =  JSON.parse(saveStructure);
 		this.pauseActions.push('load');
 		this.pauseActions.push('continue');
 		this.pause=true;
 
+	}
+
+
+	this.generateThumb = function(w,h){
+
+		this.canvii.initCanvas(0,'thumb');
+		this.canvii.setWidth(w);
+		this.canvii.setHeight(h);
+
+		var offsetX = 0;
+		var offsetY = 0;
+
+		this.viewCenterX = this.canvii.width*0.5 - offsetX;
+		this.viewCenterY = this.canvii.height*0.5 - offsetY;
+		window.viewportX = this.canvii.width*0.5 - offsetX;;
+		window.viewportY = this.canvii.height*0.5 - offsetY;
+
+		this.translateX = 0;
+		this.translateY = 0;
+		this.canvasUpdate(0);
+
+		// Now we generate a target canvas of the size of the thumb:
+
+		thumb = this.canvii.canvii[0]['context']
+		thumb.crossOrigin = "anonymous";  // This enables CORS
+		// Write all layers except for the bottom ones
+		for(var i in this.canvii.canvii){
+			if(i>=8 && i<99){
+				thumb.drawImage(this.canvii.canvii[i]['canvas'], 0,0,400, 300)
+			}
+		}
+		thumb_data = this.canvii.canvii[0]['canvas'].toDataURL();
+
+		return thumb_data
 	}
 
 	this.resizeFunction = function(){
