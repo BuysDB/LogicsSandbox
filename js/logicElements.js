@@ -6447,7 +6447,7 @@ Inputs.Toggle = function(x,y,rotation, world){
 
 	this.e.click = function(x,y){
 		lowLag.play('switch_medium');
-		this.parent.updateState();
+		this.parent.updateState(true);
 		this.parent.world.hover(x,y)
 	}
 

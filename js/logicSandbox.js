@@ -167,27 +167,29 @@ function Editor(appendTo, canvii){
 
 	this.processArrayToolClick = function(x,y){
 
-		if (this.selectedCatalogObject==undefined) {
-			this.timesClicked = 0;
-			return(0)
-		}
-
-			this.timesClicked++;
-			if (this.timesClicked==1) {
-
-				this.pointA.x = x
-				this.pointA.y = y
-			}
-			if (this.timesClicked==2) {
-				this.pointB.x = x
-				this.pointB.y = y
-
-				var points = subdivideOver(this.pointA.x, this.pointA.y, this.pointB.x, this.pointB.y, 25)
-				for(var index in points){
-
-					world.addObject(new this.selectedCatalogObject(points[index].x, points[index].y, 0, world))
-				}
+		if(world.allowWire){
+			if (this.selectedCatalogObject==undefined) {
 				this.timesClicked = 0;
+				return(0)
+			}
+
+				this.timesClicked++;
+				if (this.timesClicked==1) {
+
+					this.pointA.x = x
+					this.pointA.y = y
+				}
+				if (this.timesClicked==2) {
+					this.pointB.x = x
+					this.pointB.y = y
+
+					var points = subdivideOver(this.pointA.x, this.pointA.y, this.pointB.x, this.pointB.y, 25)
+					for(var index in points){
+
+						world.addObject(new this.selectedCatalogObject(points[index].x, points[index].y, 0, world))
+					}
+					this.timesClicked = 0;
+				}
 			}
 	}
 
@@ -203,6 +205,9 @@ function Editor(appendTo, canvii){
 
 
 		} else {
+			if(!world.allowWire){
+				return;
+			}
 			if ( this.modus == 'place' ) {
 
 				if (this.targetClicks>1) {
@@ -243,7 +248,7 @@ function Editor(appendTo, canvii){
 
 	this.resize = function(w,h){
 
-	    $('#editor').css('height',h-200)
+	    $('#editor').css('height',h-100)
 
 	}
 
@@ -419,6 +424,9 @@ function World() {
 	this.paused = false;
 	this.pauseActions = [];
 
+	this.allowDrag = true; // Set to false to not allow dragging of objects
+	this.allowWire = true; // Set to false to not allow placing of wires
+	this.isEmbedded = false; // if the simulation is embedded
 	//Initialise audio:
 	this.audioContext = undefined//new AudioContext();
 
@@ -775,13 +783,20 @@ function World() {
 		return thumb_data
 	}
 
-	this.resizeFunction = function(){
+	this.resizeFunction = function(w,h){
 
-	    var w = this.wTarget;
-	    var h = this.hTarget;
+		if(w === undefined){
+		    var w = this.wTarget;
+		    var h = this.hTarget;
+		}
 
-	    this.canvii.setWidth(Math.floor(w-380));
-	    this.canvii.setHeight(Math.floor( h-200));
+		if(this.isEmbedded){
+			this.canvii.setWidth(Math.floor(w));
+			this.canvii.setHeight(Math.floor( h));
+		} else {
+		    this.canvii.setWidth(Math.floor(w-380));
+		    this.canvii.setHeight(Math.floor( h-100));
+		}
 
 	    var offsetX = 0;
 	    var offsetY = 0;
@@ -1076,6 +1091,9 @@ function World() {
 
 	this.drag = function(startX, startY, prevX, prevY, endX, endY){
 
+		if( this.allowDrag==false ){
+			return
+		}
 	    //this.dragFromTo(prevX, prevY,endX,endY);
 	    document.body.style.cursor = 'grabbing';
 	    this.dragX = prevX;
@@ -1396,11 +1414,12 @@ function World() {
 		}
 
 		//Draw blogic logo and frametime
+		/*
 		this.canvii['effects'].context.fillStyle = "#FFF";
 		this.canvii['effects'].context.textAlign="left";
 		this.canvii['effects'].context.font = "10px Cambria";
 		this.canvii['effects'].context.fillText("Dev",this.maxX - 60, this.maxY - 20);
-		this.canvii['effects'].context.fillText(this.timeout,this.maxX - 60, this.maxY - 10);
+		this.canvii['effects'].context.fillText(this.timeout,this.maxX - 60, this.maxY - 10);*/
 
 		var endDate = new Date();
 		var frameStop = endDate.getMilliseconds();
@@ -1540,6 +1559,7 @@ $(document).ready( function(){
 	document.editor.resize( $( window ).width(), $( window ).height())
 	mousePrevPos =  CanvasFunctions.getRelativeMousePosition(canvas, ctx, world);
 	canvas.addEventListener('mousemove', function(evt) {
+
 		var mousePos = CanvasFunctions.getMousePos(canvas, evt);
 		var mouseX = world.viewCenterX-world.canvii.width*0.5 + mousePos.x
 		var mouseY = world.viewCenterY-world.canvii.height*0.5 + mousePos.y
@@ -1548,15 +1568,17 @@ $(document).ready( function(){
 		document.editor.mouseY = mouseY;
 		if (mouseIsDown) {
 
-			if (dragStarted) {
-				world.dragStart(mouseStart.x, mouseStart.y, mouseX, mouseY);
-				dragStarted = false;
-				world.dragging = true;
-			} else {
-				world.drag(mouseStart.x, mouseStart.y, mousePrevPos.x, mousePrevPos.y, mouseX, mouseY);
-				world.dragging = true;
+			if(world.allowDrag){
+				if (dragStarted) {
+					world.dragStart(mouseStart.x, mouseStart.y, mouseX, mouseY);
+					dragStarted = false;
+					world.dragging = true;
+				} else {
+					world.drag(mouseStart.x, mouseStart.y, mousePrevPos.x, mousePrevPos.y, mouseX, mouseY);
+					world.dragging = true;
+				}
+				mousePrevPos =  CanvasFunctions.getRelativeMousePosition(canvas, evt, world);
 			}
-			mousePrevPos =  CanvasFunctions.getRelativeMousePosition(canvas, evt, world);
 		} else {
 
 
@@ -1606,13 +1628,6 @@ $(document).ready( function(){
 		    world.hover(newPos.x, newPos.y);
 		}
 	}, false);
-
-
-
-
-
-
-
 
 
 iterations = 0
@@ -1697,10 +1712,23 @@ world.tick();
 // Load save if defined in URL
 url_vars = getUrlVars();
 if(  ('user' in url_vars) && ('saveName' in url_vars) ){
-	world.load(url_vars['user'], url_vars['saveName']);
 
-
+	if( ('embed' in url_vars) &&  (url_vars['embed']=='true')){
+		$('#editorMenuBar').hide();
+		$('#editor').hide();
+		world.allowDrag = false;
+		world.allowWire = false;
+		world.isEmbedded = true
+		console.log('embed mode!')
+		$('canvas').css({'left':0})
+		$('#config').hide()
+		world.load(url_vars['user'], url_vars['saveName']);
+		if('w' in url_vars && 'h' in url_vars ){
+			world.resizeFunction(url_vars['w'], url_vars['h']);
+		}
+		// file:///N:/projects/LogicsSandbox/index.html?user=BuysDB&saveName=test&embed=true&w=600&h=400
+	} else {
+		world.load(url_vars['user'], url_vars['saveName']);
+	}
 }
-
-
 })
