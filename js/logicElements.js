@@ -2359,8 +2359,6 @@ function CRT(pixelsX, pixelsY, parent) {
 
     this.set_color_mode=function(mode){
         this.color_mode = mode;
-
-
     }
 
     this.render = function(c){
@@ -2587,6 +2585,8 @@ Output.Screen = function (x,y,rotation,world) {
 	    var data = {};
 	    data.type = ['Output','Screen'];
 	    this.e.save(data);
+        data.color_mode = this.CRT.color_mode
+        data.undecidedOutput = self.undecidedOutput
 	    return(data);
     }
 
