@@ -483,7 +483,7 @@ function World() {
 		  success: function(data){
 
 			console.log(data);
-			alert( "winner" );
+			alert( "Succes!" );
 		  },
 	        error: function(e) {
 				console.log(e);
@@ -498,7 +498,7 @@ function World() {
 	}
 	this.drawSaveList = function(){
 
-		$('.coverAll').html('<div id="container"><ul class="save-list" style="height: 100%; overflow-y: scroll; top-padding: 0px; bottom-padding: 0px"></ul></div>')
+		$('.coverAll').html('<div id="container"><ul class="save-list" style="display: flex; height: '+ $(window).height() + 'px ; width: '+ $(window).width() + 'px ;  flex-direction: row; flex-wrap:wrap;  overflow-y: auto;"></ul></div>')
 		$('.coverAll').show()
 
 
@@ -545,7 +545,7 @@ function World() {
 		    tile.setAttribute("id", "save-tile-" + i);
 		    const title = document.createElement("div");
 			title.setAttribute('class','centered')
-			title.setAttribute('style','color:#FFF; font-family:Sans-serif')
+			title.setAttribute('style','color:#FFF; font-family:Sans-serif; ')
 		    const t = document.createTextNode(DB[i].title);
 		    title.appendChild(t);
 		    tile.appendChild(title);
