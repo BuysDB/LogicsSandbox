@@ -1384,7 +1384,13 @@ function Connector(x,y,rotation,parent,settings){
 
 	//Returns false on an overflow
 	this.setIntValue = function(val){
-	    val = parseInt(val);
+
+	    val =parseInt(val) ;
+        var underflow = (val<0);
+        if(underflow){
+            val = 0;
+        }
+
 	    for(var bit=0; bit<this.lines; ++bit){
 		    var s = (val >> bit) & 1
 		    if (s==1) {
@@ -1394,6 +1400,9 @@ function Connector(x,y,rotation,parent,settings){
 			this.getState(bit).set(0);
 		    }
 	    }
+        if(underflow){
+            return true;
+        }
 	    if (Math.pow(2,this.lines)<val) {
 		return(false)
 	    } else {
