@@ -6429,12 +6429,15 @@ Inputs.Toggle = function(x,y,rotation, world){
 		}*/
 	}
 
-	this.updateState = function(){
-	    	if(this.e.switchPosition==0){
-			this.e.switchPosition=1;
-		} else {
-			this.e.switchPosition=0;
-		}
+	this.updateState = function(flip){
+
+        if(flip){
+    	    if(this.e.switchPosition==0){
+    			this.e.switchPosition=1;
+    		} else {
+    			this.e.switchPosition=0;
+    		}
+        }
 		console.log(this.e.switchPosition)
 		this.e.connectors['outA'].state.set(this.e.switchPosition);
 		this.e.connectors['outB'].state.setInv(this.e.switchPosition);
@@ -6457,17 +6460,17 @@ Inputs.Toggle = function(x,y,rotation, world){
 	}
 
 	this.load = function(data){
-		if (data.switchPosition) {
+		if (data.switchPosition!==undefined) {
 			if (data.switchPosition===1 || data.switchPosition===0) {
 			    this.e.switchPosition  = data.switchPosition;
-			    this.updateState();
+			    this.updateState(0);
 			}
 
 		}
 
 	}
 
-	this.updateState();
+	this.updateState(0);
 }
 
 Inputs.DipSwitch = function(x,y,rotation, world){
@@ -6941,7 +6944,8 @@ Inputs.Pulse = function(x,y,rotation, world){
 	}
 
 	this.load = function(data){
-		this.interval = data.interval
+		this.setInterval( data.interval )
+
 	}
 
 	this.e.configure = function(me){
