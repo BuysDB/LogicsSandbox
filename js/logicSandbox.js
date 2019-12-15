@@ -498,7 +498,7 @@ function World() {
 	}
 	this.drawSaveList = function(){
 
-		$('.coverAll').html('<div id="container"><ul class="save-list" style="display: flex; height: '+ $(window).height() + 'px ; width: '+ $(window).width() + 'px ;  flex-direction: row; flex-wrap:wrap;  overflow-y: auto;"></ul></div>')
+		$('.coverAll').html('<div id="container"><ul class="save-list" style="display: flex; height: '+ ($(window).height()-10) + 'px ; width: '+ ($(window).width()-20) + 'px ;  flex-direction: row; flex-wrap:wrap;  overflow-y: auto;"></ul></div>')
 		$('.coverAll').show()
 
 
