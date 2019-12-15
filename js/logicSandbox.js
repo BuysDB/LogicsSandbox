@@ -1273,14 +1273,16 @@ function World() {
 		    this.canvii['static-overlay'].context.shadowOffsetY = 1;
 
 		    //Draw modification gear
+			/*
 		    this.canvii['static-overlay'].context.fillStyle = 'rgba(250,250,250,0.2)'
 		    this.canvii['static-overlay'].context.fillRect(0,0,250,50);
 
 		    //Draw the title and description
+
 		    this.canvii['static-overlay'].context.font = '16px Cambria';
 		    this.canvii['static-overlay'].context.textAlign = 'left';
 		    this.canvii['static-overlay'].context.fillStyle = 'rgba(250,250,250,0.8)'
-		    this.canvii['static-overlay'].context.fillText(this.title,20,25);
+		    this.canvii['static-overlay'].context.fillText(this.title,20,25);*/
 
 		    this.canvii.registerUpdate('static-overlay');
 		}
@@ -1712,7 +1714,10 @@ world.tick();
 // Load save if defined in URL
 url_vars = getUrlVars();
 if(  ('user' in url_vars) && ('saveName' in url_vars) ){
-
+	if (('shadow' in url_vars) &&  (url_vars['shadow']=='false')) {
+		window.Settings['drawShadows'] = false
+	}
+	
 	if( ('embed' in url_vars) &&  (url_vars['embed']=='true')){
 		$('#editorMenuBar').hide();
 		$('#editor').hide();

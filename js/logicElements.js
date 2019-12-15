@@ -1495,10 +1495,10 @@ function Connector(x,y,rotation,parent,settings){
 		if( canvii.updateRequired('element-bg') ){
 
 		    if(window.Settings.drawShadows){
-			canvii['element-bg'].context.shadowColor = '#222';
-			canvii['element-bg'].context.shadowBlur = 3;
-			canvii['element-bg'].context.shadowOffsetX = 0;
-			canvii['element-bg'].context.shadowOffsetY = 0;
+    			canvii['element-bg'].context.shadowColor = '#222';
+    			canvii['element-bg'].context.shadowBlur = 3;
+    			canvii['element-bg'].context.shadowOffsetX = 0;
+    			canvii['element-bg'].context.shadowOffsetY = 0;
 		    }
 
 		    canvii['element-bg'].context.beginPath();
