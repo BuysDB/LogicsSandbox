@@ -731,7 +731,7 @@ function World() {
 
 	}
 
-	this.load = function(user, saveName){
+	this.load = function(user, saveName, replace_url=true){
 
 		$.ajax({
 		  url:'http://87.209.245.2:5000/load?user='+user + '&name='+ saveName,
@@ -755,7 +755,9 @@ function World() {
 		      //2- get the part before '?'
 		      var beforeQueryString= afterDomain.split("?")[0];
 
-		  	window.history.pushState({}, document.title, beforeQueryString + '?user=' + user + '&saveName=' + saveName);
+			if(replace_url){
+		  		window.history.pushState({}, document.title, beforeQueryString + '?user=' + user + '&saveName=' + saveName);
+			}
 
 		  },
 	        error: function(e) {
@@ -1753,7 +1755,7 @@ if(  ('user' in url_vars) && ('saveName' in url_vars) ){
 		console.log('embed mode!')
 		$('canvas').css({'left':0})
 		$('#config').hide()
-		world.load(url_vars['user'], url_vars['saveName']);
+		world.load(url_vars['user'], url_vars['saveName'], replace_url=false);
 		if('w' in url_vars && 'h' in url_vars ){
 			world.resizeFunction(url_vars['w'], url_vars['h']);
 		}
