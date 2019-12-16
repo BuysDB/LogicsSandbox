@@ -481,9 +481,14 @@ function World() {
 		contentType:"application/json; charset=utf-8",
 		dataType:"json",
 		  success: function(data){
+			  if( ('reason' in data) && (data.reason=='not_logged_in')){
+				  window.open("http://87.209.245.2:5000/login");
+				  console.log('Not logged in')
+				  alert( "Not logged in! Allow pop-ups to get to the login screen" );
+			  } else {
 
-			console.log(data);
-			alert( "Succes!" );
+				  alert( "Succes!" );
+			  }
 		  },
 	        error: function(e) {
 				console.log(e);
