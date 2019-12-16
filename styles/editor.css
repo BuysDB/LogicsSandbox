@@ -23,6 +23,11 @@ input, label, .slider{
     width:120px;
 }
 
+body {
+    margin-top: 0px;
+}
+
+
 #sim{
 	float:left;
 }
