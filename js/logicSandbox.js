@@ -1767,7 +1767,7 @@ if(  ('user' in url_vars) && ('saveName' in url_vars) ){
 		$("#linkout").on("click",function(){
 			world.pause = true
 			window.open( "index.html?user="+ url_vars['user'] + '&' + url_vars['saveName']   )
-		}
+		});
 
 	} else {
 		world.load(url_vars['user'], url_vars['saveName']);
