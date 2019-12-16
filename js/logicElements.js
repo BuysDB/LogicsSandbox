@@ -4334,7 +4334,218 @@ SimpleIcs['Register'] = function(x,y,rotation, world){
 
 }
 
+
 SimpleIcs['Memory'] = function(x,y,rotation, world){
+
+	this.e = new electronicObject(x,y,rotation,{width:175, height:300, parent:this})
+	this.bits = 8;
+    this.addressSize = 4; // ADress size in bits
+    this.total_addresses = Math.pow(2,4)
+
+    this.vertical_offset = 40;
+    this.vertical_translate = 0;
+    this.lamp_bank_X = -40
+    this.connector_X_offset = 75
+    this.mem_bank_X = -20
+    this.extra_offset_vert = 5
+    this.cell_dim = 10;
+    this.cell_color = {r:130, g:195, b:30, a:1}
+    this.color = {r:250, g:100, b:3, a:1}
+
+    this.set_lamps = function(){
+        this.addrlamps = []
+        this.valueLamps = []
+        this.color = {r:250, g:50, b:3, a:1}
+        for(var i=0; i<this.bits; i++){
+
+            this.valueLamps.push( new IndicatorLamp(this, this.mem_bank_X+ i*10, -this.e.height*0.5 + 10, 4, this.color));
+            //this.valueLamps[i].setValue(255);
+        }
+
+
+
+        for(var i=0; i<this.total_addresses; i++){
+
+            this.addrlamps.push( new IndicatorLamp(this, this.lamp_bank_X, this.extra_offset_vert*0.5 + this.vertical_translate+ -0.5*this.e.height + 0.5*this.vertical_offset + (this.e.height - this.vertical_offset - this.extra_offset_vert)*(i/(this.total_addresses-1)),8-(2*(this.total_addresses>4)),this.color) );
+
+        }
+
+    }
+    this.set_lamps();
+
+    this.e.connectors = {
+	    'dataIn':new Connector(-this.connector_X_offset, 20, 0, this.e, {connectorType:1,label:'dataIn', lines:this.bits}),
+	    'address':new Connector(-this.connector_X_offset, 0, 0, this.e, {connectorType:1,label:'Address', lines:this.addressSize}),
+	    'dataOut':new Connector(this.connector_X_offset, -15, 0, this.e, {connectorType:2,label:'dataOut',lines:this.bits}),
+      'ready':new Connector(this.connector_X_offset, 15, 0, this.e, {connectorType:2,label:'Ready'}),
+	    'clock':new Connector(-this.connector_X_offset, -35, 0, this.e, {connectorType:1,label:'Clock'}),
+	    'write':new Connector(-this.connector_X_offset, -20, 0, this.e, {connectorType:1,label:'Write'}),
+      'reset':new Connector(-this.connector_X_offset, 35, 0, this.e, {connectorType:1,label:'Reset'})
+	    };
+
+	this.data = new Uint8Array(Math.pow(2,this.addressSize));
+	for(var bit=0; bit<this.bits; bit++){
+        this.valueLamps[bit].setValue(255);
+	}
+
+	this.hit = function(x,y){
+		return( this.e.hit(x,y) );
+	}
+
+    this.render_memory_state = function(canvii,addr){
+
+        env = canvii['element-fg'].context;
+        for(var bit=0; bit<this.bits; bit++){
+            var y =  2+ this.extra_offset_vert*0.5 + this.vertical_translate+ -0.5*this.e.height + 0.5*this.vertical_offset + (this.e.height - this.vertical_offset - this.extra_offset_vert)*(addr/(this.total_addresses-1))
+            value = this.data[addr] & (1<<bit)
+
+
+            if(value==0){
+
+            } else {
+
+
+                cY = this.e.ypos + y //- this.cell_dim*0.5
+                cX = this.e.xpos  + this.mem_bank_X + bit * 10 //- this.cell_dim*0.5,
+                /*
+                var grad = canvii['element-fg'].context.createRadialGradient(cX, cY, this.cell_dim*0.1, cX, cY, this.cell_dim*0.7);
+                grad.addColorStop(0,"rgba("+this.cell_color.r+","+this.cell_color.g+","+this.cell_color.b+",0.8)");
+                grad.addColorStop(0.5, "rgba("+this.cell_color.r+","+this.cell_color.g+","+this.cell_color.b+",0.5)");
+                grad.addColorStop(1, "rgba("+this.cell_color.r+","+this.cell_color.g+","+this.cell_color.b+",0.0)");
+
+                env.beginPath();
+        		env.arc(cX, cY, this.cell_dim*2, 0, 2 * Math.PI, false);
+        		env.fillStyle = grad;
+        		env.fill();*/
+
+        		var v = 240
+        		env.fillStyle = "rgb("+v+","+v+","+v+")";
+        		env.beginPath();
+        		env.arc(cX, cY, this.cell_dim*0.2, 0, 2*Math.PI, false);
+        		env.fill();
+            }
+        }
+    }
+	this.render = function(canvii){
+		this.e.render(canvii);
+
+
+        if( canvii.updateRequired('element-bg') ){
+            env = canvii['element-bg'].context;
+            for(var i=0; i<this.total_addresses; i+=1){
+                for(var bit=0; bit<this.bits; bit+=1){
+                   var y =  2+ this.extra_offset_vert*0.5 + this.vertical_translate+ -0.5*this.e.height + 0.5*this.vertical_offset + (this.e.height - this.vertical_offset - this.extra_offset_vert)*(i/(this.total_addresses-1))
+                   env.strokeStyle="rgb(120,120,120)";
+                   env.fillStyle="rgb(40,20,30)";
+                   env.lineWidth = 1;
+                   env.beginPath()
+                   env.rect(this.e.xpos  + this.mem_bank_X + bit * 10 - this.cell_dim*0.5, this.e.ypos + y - this.cell_dim*0.5,  this.cell_dim, this.cell_dim);
+                   env.stroke()
+                   env.fill()
+                }
+            }
+        }
+        if( canvii.updateRequired('element-fg') ){
+            for(var i=0; i<this.total_addresses; i++){
+                this.render_memory_state(canvii, i)
+            }
+        }
+        for (var i in this.addrlamps) {
+            this.addrlamps[i].render(canvii);
+        }
+        for (var i in this.valueLamps) {
+            this.valueLamps[i].render(canvii);
+        }
+
+
+
+        if( canvii.updateRequired('element-fg') ){
+		    var env = canvii['element-fg'].context;
+
+            // -0.5*this.e.width, -0.5*this.e.height);
+
+        }
+
+	}
+
+	this.hover = function(x,y){return(this.e.hover(x,y))
+	}
+	this.updateLines = function(size){
+		this.e.connectors['dataIn'].setLineCount(size);
+		this.e.connectors['dataOut'].setLineCount(size);
+	}
+
+	this.tick = function(){
+		this.e.tick();
+        if (this.e.connectors['clock'].getState(0).get()==1){
+
+          if(this.addressPointer!=this.e.connectors['address'].getIntValue()){
+            this.readTimer = this.accessTime;
+            this.e.connectors['ready'].getState(0).set(0);
+            if(this.addressPointer!==undefined){
+                this.addrlamps[this.addressPointer].setValue(0)
+            }
+            this.addressPointer = this.e.connectors['address'].getIntValue();
+            this.addrlamps[this.addressPointer].setValue(255)
+          }
+
+          //Writing to the register:
+          if(this.e.connectors['reset'].getState().get()==1){
+            //@TODO: this might be expensive
+            if(this.wasReset==false){
+              this.wasReset = true;
+              this.data = Uint8Array(Math.pow(2,this.addressSize));
+              this.e.connectors['ready'].getState(0).set(1);
+            }
+          } else if (this.e.connectors['write'].getState(0).get()==1) {
+                this.wasReset = false;
+                var iv = this.e.connectors['dataIn'].getIntValue()
+                this.data[this.e.connectors['address'].getIntValue()] = iv;
+                for(var bit=0; bit<this.bits; bit++){
+                    this.valueLamps[bit].setValue( (iv & (1<<bit))*250 );
+                }
+                this.e.connectors['ready'].getState(0).set(1);
+            } else {
+
+            //We will read if no reset or write is issued
+
+                for(var bit=0; bit<this.bits; bit++){
+                    var ib = this.data[this.e.connectors['address'].getIntValue()] & (1<<bit)
+                    this.e.connectors['dataOut'].getState(bit).set(ib);
+                    this.valueLamps[bit].setValue( ib*250 );
+                }
+}
+        }
+    }
+
+
+	this.e.configure = function(me){
+		var conf = {}
+		conf.bits = {value:me.parent.bits, label:'Bits', desciption:'Bit size of register', range:{start:1, end:16, step:1 },
+				set:function(me, value){
+					//Increase the size of the bus:
+					me.parent.updateLines(value)
+					me.parent.bits  = value;
+                    me.parent.set_lamps();
+					}
+			};
+		return(conf);
+	}
+
+	//@TODO ADD LOAD AND SAVE FUNCTIONS
+	this.save = function(){
+		var data = {};
+		data.type = ['SimpleIcs','Memory'];
+		this.e.save(data);
+		return(data);
+	}
+  	this.load = function(data){
+  	}
+
+}
+
+
+SimpleIcs['L-Memory'] = function(x,y,rotation, world){
 
     this.e = new electronicObject(x,y,rotation,{width:50, height:100, parent:this})
     this.bits = 8;
@@ -4343,7 +4554,7 @@ SimpleIcs['Memory'] = function(x,y,rotation, world){
     this.accessTime = 10;
     this.readTimer = 0;
     this.e.connectors = {
-	    'dataIn':new Connector(-15, 20, 0, this.e, {connectorType:1,label:'dataIn', lines:this.bits}),
+	    'dataIn':new Connector(-15, -20, 0, this.e, {connectorType:1,label:'dataIn', lines:this.bits}),
 	    'address':new Connector(-15, 0, 0, this.e, {connectorType:1,label:'Address', lines:this.addressSize}),
 	    'dataOut':new Connector(15, -15, 0, this.e, {connectorType:2,label:'dataOut',lines:this.bits}),
       'ready':new Connector(15, 15, 0, this.e, {connectorType:2,label:'Ready'}),
@@ -4408,7 +4619,7 @@ SimpleIcs['Memory'] = function(x,y,rotation, world){
     //@TODO ADD LOAD AND SAVE FUNCTIONS
     this.save = function(){
     	var data = {};
-    	data.type = ['SimpleIcs','Memory'];
+    	data.type = ['SimpleIcs','L-Memory'];
       data.accessTime = this.accessTime;
     	this.e.save(data);
     	return(data);
