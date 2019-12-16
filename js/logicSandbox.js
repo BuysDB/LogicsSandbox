@@ -1758,8 +1758,16 @@ if(  ('user' in url_vars) && ('saveName' in url_vars) ){
 		world.load(url_vars['user'], url_vars['saveName'], replace_url=false);
 		if('w' in url_vars && 'h' in url_vars ){
 			world.resizeFunction(url_vars['w'], url_vars['h']);
+			$('.main').css({'height':url_vars['h'], 'width':url_vars['w']})
 		}
+		$('#editor').hide();
+		$('.main').append('<div style="position: relative; bottom: 20px; pointer-events: none; z-index:999"><span id="linkout" style=" background-color:rgba(200,200,200,0.5); pointer-events: auto; padding: 3px;  font-family:Sans-serif; ">Edit this simulation</span></div>');
 		// file:///N:/projects/LogicsSandbox/index.html?user=BuysDB&saveName=test&embed=true&w=600&h=400
+
+		$("#linkout").on("click",function(){
+			world.pause = true
+			location.href="index.html?user="+ url_vars['user'] + '&' + url_vars['saveName']  })
+
 	} else {
 		world.load(url_vars['user'], url_vars['saveName']);
 	}
