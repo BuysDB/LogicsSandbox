@@ -1734,7 +1734,17 @@ world.tick();
 
 // Load save if defined in URL
 url_vars = getUrlVars();
-if(  ('user' in url_vars) && ('saveName' in url_vars) ){
+
+if( ('loadlist' in url_vars) &&  (url_vars['loadlist']=='true')){
+
+	console.log("Creating load list")
+	var currURL= window.location.href; //get current address
+	var afterDomain= currURL.substring(currURL.lastIndexOf('/') + 1);
+	var beforeQueryString= afterDomain.split("?")[0];
+	window.history.pushState({}, document.title, beforeQueryString);
+	world.drawSaveList()
+
+} else if(  ('user' in url_vars) && ('saveName' in url_vars) ){
 
 	if (('shadow' in url_vars) &&  (url_vars['shadow']=='false')) {
 		window.Settings['drawShadows'] = false
@@ -1745,6 +1755,7 @@ if(  ('user' in url_vars) && ('saveName' in url_vars) ){
 		$('#world_1').hide()
 		$('#world_4').hide()
 	}
+
 
 	if( ('embed' in url_vars) &&  (url_vars['embed']=='true')){
 		$('#editorMenuBar').hide();
